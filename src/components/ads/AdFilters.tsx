@@ -123,6 +123,20 @@ export function AdFilters({
             <option value="instagram">Instagram</option>
           </select>
 
+          {/* Country Dropdown */}
+          <select
+            value={filters.country || 'BR'}
+            onChange={(e) => onChange({ ...filters, country: e.target.value, page: 1 })}
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium outline-none focus:border-emerald-500"
+          >
+            <option value="BR">🇧🇷 Brasil (BR)</option>
+            <option value="US">🇺🇸 Estados Unidos (US)</option>
+            <option value="PT">🇵🇹 Portugal (PT)</option>
+            <option value="ES">🇪🇸 Espanha (ES)</option>
+            <option value="GB">🇬🇧 Reino Unido (GB)</option>
+            <option value="ALL">🌐 Todos os Países</option>
+          </select>
+
           {/* Longevity Filter */}
           <select
             value={filters.minDaysActive || ''}

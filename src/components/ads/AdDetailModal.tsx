@@ -175,12 +175,20 @@ export function AdDetailModal({
               {/* Media Preview Column */}
               <div className="md:col-span-5 space-y-3">
                 <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 relative group aspect-square flex items-center justify-center">
-                  {ad.media_url ? (
+                  {ad.media_url && !ad.media_url.includes('render_ad') ? (
                     <img
                       src={ad.media_url}
                       alt={ad.headline}
                       className="w-full h-full object-cover"
                     />
+                  ) : ad.snapshot_url ? (
+                    <div className="w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center">
+                      <iframe
+                        src={ad.snapshot_url}
+                        title={ad.headline}
+                        className="w-full h-full border-0"
+                      />
+                    </div>
                   ) : (
                     <div className="text-center p-6 text-slate-400">
                       <Layers className="w-12 h-12 mx-auto mb-2 opacity-40" />

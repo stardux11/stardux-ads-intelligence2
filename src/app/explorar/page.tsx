@@ -65,6 +65,7 @@ function ExplorarContent() {
       const params = new URLSearchParams();
       if (filters.keyword) params.set('keyword', filters.keyword);
       if (filters.niche) params.set('niche', filters.niche);
+      if (filters.country) params.set('country', filters.country);
       if (filters.format && filters.format !== 'all') params.set('format', filters.format);
       if (filters.platform && filters.platform !== 'all') params.set('platform', filters.platform);
       if (filters.status && filters.status !== 'all') params.set('status', filters.status);

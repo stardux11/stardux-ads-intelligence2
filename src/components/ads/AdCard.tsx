@@ -48,12 +48,23 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
         onClick={() => onOpenDetail(ad)}
         className="aspect-[16/10] bg-slate-100 dark:bg-slate-800 relative cursor-pointer overflow-hidden flex items-center justify-center border-b border-slate-100 dark:border-slate-800/80"
       >
-        {ad.media_url ? (
+        {ad.media_url && !ad.media_url.includes('render_ad') ? (
           <img
             src={ad.media_url}
             alt={ad.headline}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
+        ) : ad.snapshot_url ? (
+          <div className="w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center">
+            <iframe
+              src={ad.snapshot_url}
+              title={ad.headline}
+              className="w-[180%] h-[180%] pointer-events-none scale-50 origin-top-left border-0 opacity-90"
+              scrolling="no"
+              tabIndex={-1}
+            />
+            <div className="absolute inset-0 bg-transparent" />
+          </div>
         ) : (
           <div className="text-center p-4 text-slate-400">
             <Layers className="w-8 h-8 mx-auto mb-1 opacity-50" />

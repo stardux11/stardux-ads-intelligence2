@@ -42,12 +42,13 @@ export class MetaAdLibraryProvider implements IDataProvider {
 
     try {
       const searchTerms = filters.keyword?.trim() || filters.niche?.replace(/-/g, ' ') || filters.advertiser_name || 'marketing';
+      const country = filters.country && filters.country !== 'ALL' ? filters.country : 'BR';
       const url = new URL('https://graph.facebook.com/v21.0/ads_archive');
       url.searchParams.set('access_token', token);
-      url.searchParams.set('ad_reached_countries', `['${filters.country || 'BR'}']`);
+      url.searchParams.set('ad_reached_countries', `['${country}']`);
       url.searchParams.set('ad_active_status', filters.status === 'inactive' ? 'INACTIVE' : 'ACTIVE');
       url.searchParams.set('search_terms', searchTerms);
-      url.searchParams.set('fields', 'id,ad_creation_time,ad_delivery_start_time,ad_delivery_stop_time,ad_creative_bodies,ad_creative_link_captions,ad_creative_link_titles,page_name,page_id,publisher_platforms');
+      url.searchParams.set('fields', 'id,ad_creation_time,ad_delivery_start_time,ad_delivery_stop_time,ad_creative_bodies,ad_creative_link_captions,ad_creative_link_titles,page_name,page_id,publisher_platforms,ad_snapshot_url');
       url.searchParams.set('limit', String(filters.limit || 30));
 
       const res = await fetch(url.toString());
@@ -91,7 +92,7 @@ export class MetaAdLibraryProvider implements IDataProvider {
           external_id: item.id,
           original_url: `https://www.facebook.com/ads/library/?id=${item.id}`,
           source: 'meta_ad_library',
-          country: filters.country || 'BR',
+          country: country,
           platforms: platforms as any,
           format: 'image',
           status_observed: 'active',
@@ -104,7 +105,8 @@ export class MetaAdLibraryProvider implements IDataProvider {
           description: item.ad_creative_link_captions?.[0] || '',
           cta_text: 'Saiba mais',
           destination_url: '',
-          media_url: '',
+          media_url: item.ad_snapshot_url || '',
+          snapshot_url: item.ad_snapshot_url || '',
           isc_score: isc.totalScore,
           isc_breakdown: isc,
           is_demo: false,

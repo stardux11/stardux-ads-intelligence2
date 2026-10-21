@@ -48,6 +48,7 @@ export interface Ad {
   destination_url?: string;
   media_url?: string;
   thumbnail_url?: string;
+  snapshot_url?: string;
   
   // Análise Algorítmica de Sinais
   isc_score: number;

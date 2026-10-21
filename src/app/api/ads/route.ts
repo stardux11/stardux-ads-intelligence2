@@ -25,12 +25,42 @@ export async function GET(request: Request) {
       limit: searchParams.get('limit') ? Number(searchParams.get('limit')) : 50,
     };
 
-    const result = db.getAds(filters);
+    let result = db.getAds(filters);
+
+    // Se houver META_ACCESS_TOKEN e uma busca por palavra-chave ou nicho, ou se o banco estiver vazio, consulta a Graph API oficial
+    const metaToken = process.env.META_ACCESS_TOKEN?.trim();
+    if (metaToken && (filters.keyword || filters.niche || result.total === 0)) {
+      try {
+        const { MetaAdLibraryProvider } = await import('@/lib/providers/meta-provider');
+        const metaProvider = new MetaAdLibraryProvider();
+        const metaResult = await metaProvider.searchAds({
+          ...filters,
+          keyword: filters.keyword || filters.niche || 'marketing digital',
+          limit: filters.limit || 25,
+        });
+
+        if (metaResult.ads && metaResult.ads.length > 0) {
+          // Salva os anúncios encontrados no banco local/supabase para persistência e relatórios futuros
+          metaResult.ads.forEach((metaAd) => {
+            try {
+              db.createAd(metaAd);
+            } catch {
+              // Já existe ou duplicata, ignora
+            }
+          });
+          result = db.getAds(filters);
+        }
+      } catch (metaErr) {
+        console.warn('Erro ao consultar Meta Graph API ao vivo:', metaErr);
+      }
+    }
+
     return NextResponse.json(result);
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+
 
 export async function POST(request: Request) {
   try {

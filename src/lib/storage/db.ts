@@ -61,69 +61,21 @@ export class StarduxDatabase {
       console.warn('Erro ao ler .stardux-data/stardux-db.json, inicializando com dados padrão:', err);
     }
 
-    // Inicialização padrão com dados demonstrativos estruturados
+    // Inicialização limpa padrão (0 anúncios fictícios)
     const initialState: StarduxDBState = {
       niches: [...INITIAL_NICHES],
-      projects: [...INITIAL_PROJECTS],
-      advertisers: [...INITIAL_ADVERTISERS],
-      ads: [...INITIAL_ADS],
-      collections: [...INITIAL_COLLECTIONS],
-      collectionItems: [
-        {
-          id: 'item-1',
-          collection_id: 'coll-melhores-ganchos',
-          ad_id: 'demo-ad-1',
-          tags: ['Imóveis', 'Vídeo', 'Alto Padrão'],
-          personal_notes: 'Excelente gancho de pergunta e tour dinâmico.',
-          saved_at: '2026-10-18T10:00:00Z',
-        },
-        {
-          id: 'item-2',
-          collection_id: 'coll-melhores-ganchos',
-          ad_id: 'demo-ad-5',
-          tags: ['Odonto', 'Alinhadores', 'Prova 3D'],
-          personal_notes: 'Uso de escaneamento gratuito como redutor de atrito.',
-          saved_at: '2026-10-18T10:00:00Z',
-        },
-        {
-          id: 'item-3',
-          collection_id: 'coll-ofertas-irresistiveis',
-          ad_id: 'demo-ad-8',
-          tags: ['B2B', 'Jurídico', 'Sem Custo Inicial'],
-          personal_notes: 'Auditoria preliminar sem custo é o lead magnet perfeito para Lucro Real.',
-          saved_at: '2026-10-18T10:00:00Z',
-        },
-      ],
-      reports: [
-        {
-          id: 'rep-demo-1',
-          organization_id: 'org-default',
-          project_id: 'proj-imobiliarias',
-          title: 'Relatório Competitivo — Mercado Imobiliário de Alto Padrão SP',
-          niche_name: 'Imobiliárias e Alto Padrão',
-          period_start: '2026-06-01',
-          period_end: '2026-10-19',
-          ads_count: 5,
-          competitors_analyzed: ['Imóveis Prime Jardins', 'Reserva Ibirapuera Residencial', 'Vanguard Jardins Empreendimentos'],
-          summary: 'Análise de 5 anúncios monitorados no nicho imobiliário de luxo. Identificado forte predomínio de criativos em formato de vídeo e carrossel destacando vistas definitivas e itens de lazer privativo.',
-          trends_identified: [
-            { title: 'Foco em Vistas Panorâmicas', description: '80% dos anúncios enfatizam a vista verde do Parque Ibirapuera ou Jardins.', frequency: '4 de 5 anúncios' },
-            { title: 'Redução de Fricção no WhatsApp', description: 'Transição do formulário padrão para atendimento consultivo imediato.', frequency: '60% das campanhas' },
-            { title: 'Longevidade de Vídeos de Tour', description: 'Criativos em vídeo sustentam veiculação por mais de 120 dias.', frequency: 'Média de 95 dias' },
-          ],
-          strategic_recommendations: [
-            { priority: 'alta', action: 'Produzir tours em vídeo vertical (9:16) com locução humana autoral.', rationale: 'Maior taxa de longevidade observada no segmento.' },
-            { priority: 'média', action: 'Substituir chamadas genéricas de "Compre seu imóvel" por agendamento de degustação/visita.', rationale: 'Menor atrito inicial percebido.' },
-          ],
-          disclaimer: 'Relatório gerado com base estrita em sinais observáveis na Biblioteca de Anúncios da Meta. Não inclui dados financeiros de vendas, faturamento ou ROAS.',
-          created_at: '2026-10-19T14:30:00Z',
-        },
-      ],
+      projects: [],
+      advertisers: [],
+      ads: [],
+      collections: [],
+      collectionItems: [],
+      reports: [],
       lastUpdated: new Date().toISOString(),
     };
 
     this.saveToDisk(initialState);
     return initialState;
+
   }
 
   private saveToDisk(state: StarduxDBState) {

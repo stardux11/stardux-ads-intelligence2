@@ -41,14 +41,14 @@ export class MetaAdLibraryProvider implements IDataProvider {
     }
 
     try {
-      const searchTerms = filters.keyword || filters.advertiser_name || 'marketing';
+      const searchTerms = filters.keyword?.trim() || filters.niche?.replace(/-/g, ' ') || filters.advertiser_name || 'marketing';
       const url = new URL('https://graph.facebook.com/v21.0/ads_archive');
       url.searchParams.set('access_token', token);
       url.searchParams.set('ad_reached_countries', `['${filters.country || 'BR'}']`);
       url.searchParams.set('ad_active_status', filters.status === 'inactive' ? 'INACTIVE' : 'ACTIVE');
       url.searchParams.set('search_terms', searchTerms);
       url.searchParams.set('fields', 'id,ad_creation_time,ad_delivery_start_time,ad_delivery_stop_time,ad_creative_bodies,ad_creative_link_captions,ad_creative_link_titles,page_name,page_id,publisher_platforms');
-      url.searchParams.set('limit', String(filters.limit || 25));
+      url.searchParams.set('limit', String(filters.limit || 30));
 
       const res = await fetch(url.toString());
       if (!res.ok) {
@@ -86,6 +86,8 @@ export class MetaAdLibraryProvider implements IDataProvider {
           organization_id: 'org-default',
           advertiser_id: `meta-page-${item.page_id || idx}`,
           advertiser_name: item.page_name || 'Anunciante Meta',
+          niche_id: filters.niche,
+          niche_name: filters.niche ? filters.niche.replace(/-/g, ' ') : undefined,
           external_id: item.id,
           original_url: `https://www.facebook.com/ads/library/?id=${item.id}`,
           source: 'meta_ad_library',

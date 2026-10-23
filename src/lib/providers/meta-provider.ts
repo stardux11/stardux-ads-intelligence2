@@ -45,7 +45,7 @@ export class MetaAdLibraryProvider implements IDataProvider {
       const country = filters.country && filters.country !== 'ALL' ? filters.country : 'BR';
       const url = new URL('https://graph.facebook.com/v21.0/ads_archive');
       url.searchParams.set('access_token', token);
-      url.searchParams.set('ad_reached_countries', `['${country}']`);
+      url.searchParams.set('ad_reached_countries', JSON.stringify([country]));
       url.searchParams.set('ad_active_status', filters.status === 'inactive' ? 'INACTIVE' : 'ACTIVE');
       url.searchParams.set('search_terms', searchTerms);
       url.searchParams.set('fields', 'id,ad_creation_time,ad_delivery_start_time,ad_delivery_stop_time,ad_creative_bodies,ad_creative_link_captions,ad_creative_link_titles,page_name,page_id,publisher_platforms,ad_snapshot_url');

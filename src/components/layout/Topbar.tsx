@@ -10,6 +10,9 @@ import {
   RefreshCw,
   Trash2,
   CheckCircle2,
+  Bell,
+  AlertTriangle,
+  ExternalLink,
 } from 'lucide-react';
 
 interface TopbarProps {
@@ -21,8 +24,23 @@ interface TopbarProps {
 export function Topbar({ onOpenImportCsv, onOpenCreateAd, onDemoDataAction }: TopbarProps) {
   const [isDark, setIsDark] = useState(false);
   const [showDemoMenu, setShowDemoMenu] = useState(false);
+  const [showNotifMenu, setShowNotifMenu] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  React.useEffect(() => {
+    fetch('/api/notifications')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d && Array.isArray(d.notifications)) {
+          setNotifications(d.notifications);
+          setUnreadCount(d.unreadCount || 0);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const toggleTheme = () => {
     const nextDark = !isDark;
@@ -140,6 +158,62 @@ export function Topbar({ onOpenImportCsv, onOpenCreateAd, onDemoDataAction }: To
             <span>Novo Anúncio</span>
           </button>
         )}
+
+        {/* Notification Bell */}
+        <div className="relative">
+          <button
+            onClick={() => setShowNotifMenu(!showNotifMenu)}
+            className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700/80 flex items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors relative"
+            title="Notificações & Alertas do Sistema"
+            aria-label="Notificações"
+          >
+            <Bell className="w-4 h-4" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 text-[10px] font-bold text-white flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse">
+                {unreadCount}
+              </span>
+            )}
+          </button>
+
+          {showNotifMenu && (
+            <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-3 z-50 text-xs animate-in fade-in slide-in-from-top-1">
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 dark:border-slate-800">
+                <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <Bell className="w-3.5 h-3.5 text-emerald-500" />
+                  Notificações & Alertas
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  {notifications.length} registros
+                </span>
+              </div>
+
+              <div className="space-y-2 max-h-80 overflow-y-auto">
+                {notifications.length === 0 ? (
+                  <p className="text-slate-400 text-center py-4">Nenhuma notificação no momento.</p>
+                ) : (
+                  notifications.map((n) => (
+                    <a
+                      key={n.id}
+                      href={n.link || '#'}
+                      onClick={() => setShowNotifMenu(false)}
+                      className="block p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-100 dark:border-slate-700/50 transition-colors"
+                    >
+                      <div className="flex items-start gap-2">
+                        {n.status === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />}
+                        {n.status === 'warning' && <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />}
+                        {n.status === 'info' && <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 mt-1.5" />}
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-900 dark:text-white text-xs">{n.title}</p>
+                          <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5 leading-snug">{n.description}</p>
+                        </div>
+                      </div>
+                    </a>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Theme Toggle */}
         <button

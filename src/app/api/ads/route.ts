@@ -25,11 +25,27 @@ export async function GET(request: Request) {
       limit: searchParams.get('limit') ? Number(searchParams.get('limit')) : 50,
     };
 
+    const hasSearchFilter = Boolean(filters.keyword || filters.niche || filters.advertiser_name || filters.advertiser_id || filters.project_id);
+
+    // Se nenhuma busca ou nicho foi especificado, inicia zerado conforme solicitado pelo usuário
+    if (!hasSearchFilter) {
+      return NextResponse.json({
+        ads: [],
+        total: 0,
+        page: filters.page,
+        limit: filters.limit,
+        totalPages: 0,
+        notice: 'Selecione um nicho ou digite uma palavra-chave para explorar anúncios ativos.',
+      });
+    }
+
     let result = db.getAds(filters);
 
-    // Se houver META_ACCESS_TOKEN e uma busca por palavra-chave ou nicho, ou se o banco estiver vazio, consulta a Graph API oficial
+    // Se houver META_ACCESS_TOKEN e uma busca por palavra-chave ou nicho, consulta a Graph API oficial
     const metaToken = process.env.META_ACCESS_TOKEN?.trim();
-    if (metaToken && (filters.keyword || filters.niche || result.total === 0)) {
+    let apiNotice: string | undefined = undefined;
+
+    if (metaToken && (filters.keyword || filters.niche)) {
       try {
         const { MetaAdLibraryProvider } = await import('@/lib/providers/meta-provider');
         const metaProvider = new MetaAdLibraryProvider();
@@ -38,6 +54,10 @@ export async function GET(request: Request) {
           keyword: filters.keyword || filters.niche || 'marketing digital',
           limit: filters.limit || 25,
         });
+
+        if (metaResult.notice) {
+          apiNotice = metaResult.notice;
+        }
 
         if (metaResult.ads && metaResult.ads.length > 0) {
           // Salva os anúncios encontrados no banco local/supabase para persistência e relatórios futuros
@@ -48,14 +68,27 @@ export async function GET(request: Request) {
               // Já existe ou duplicata, ignora
             }
           });
-          result = db.getAds(filters);
+          const reQueried = db.getAds(filters);
+          // Se a busca local filtrou ou não bateu por regex, garante que os anúncios retornados da Meta sejam exibidos
+          if (reQueried.ads.length > 0) {
+            result = reQueried;
+          } else {
+            result = {
+              ads: metaResult.ads,
+              total: metaResult.totalCount,
+            };
+          }
         }
-      } catch (metaErr) {
+      } catch (metaErr: any) {
         console.warn('Erro ao consultar Meta Graph API ao vivo:', metaErr);
+        apiNotice = `Erro ao consultar Meta Graph API: ${metaErr.message}`;
       }
     }
 
-    return NextResponse.json(result);
+    return NextResponse.json({
+      ...result,
+      notice: apiNotice,
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

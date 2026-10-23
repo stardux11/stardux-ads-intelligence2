@@ -32,6 +32,7 @@ function ExplorarContent() {
   const [niches, setNiches] = useState<Niche[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [apiNotice, setApiNotice] = useState<string | null>(null);
 
   // Modals state
   const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
@@ -62,6 +63,7 @@ function ExplorarContent() {
   const fetchAds = async () => {
     try {
       setLoading(true);
+      setApiNotice(null);
       const params = new URLSearchParams();
       if (filters.keyword) params.set('keyword', filters.keyword);
       if (filters.niche) params.set('niche', filters.niche);
@@ -79,6 +81,9 @@ function ExplorarContent() {
       if (data && Array.isArray(data.ads)) {
         setAds(data.ads);
         setTotalCount(data.total);
+      }
+      if (data && data.notice) {
+        setApiNotice(data.notice);
       }
     } catch (err) {
       console.error(err);
@@ -100,6 +105,33 @@ function ExplorarContent() {
   return (
     <Shell>
       <div className="space-y-6">
+        {/* Aviso de API da Meta ou Status de Consulta */}
+        {apiNotice && (
+          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs flex items-start justify-between gap-3 animate-in fade-in">
+            <div className="flex items-start gap-2.5">
+              <span className="text-base leading-none">⚠️</span>
+              <div>
+                <strong className="font-semibold block mb-0.5">Aviso da Meta Graph API</strong>
+                <p className="text-amber-800/90 dark:text-amber-200/90 leading-relaxed">{apiNotice}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <a
+                    href="/configuracoes"
+                    className="underline font-bold text-amber-900 dark:text-amber-200 hover:opacity-80"
+                  >
+                    Ir para Configurações e gerar Token Permanente →
+                  </a>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setApiNotice(null)}
+              className="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200 text-xs font-bold px-2 py-1"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         {/* Filters and Search Hero Header */}
         <AdFilters
           filters={filters}
@@ -117,30 +149,46 @@ function ExplorarContent() {
             <p className="text-xs text-slate-500 font-medium">Buscando anúncios e calculando sinais...</p>
           </div>
         ) : ads.length === 0 ? (
-          <div className="p-12 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
+          <div className="p-14 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
             <SearchX className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
             <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm">
-              Nenhum anúncio encontrado
+              {!filters.keyword && !filters.niche ? 'Escolha um Nicho ou Digite um Termo para Começar' : 'Nenhum anúncio encontrado'}
             </h3>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
-              Tente alterar os termos de busca, limpar os filtros ou carregar o conjunto de demonstração.
+            <p className="text-xs text-slate-400 max-w-md mx-auto mt-1 mb-5">
+              {!filters.keyword && !filters.niche
+                ? 'Para consultar anúncios em tempo real, selecione um dos nichos acima (ex: Saúde e Bem-Estar, Infoprodutos) ou busque por palavras-chave na barra superior.'
+                : 'Tente alterar os termos de busca, limpar os filtros ou carregar o conjunto de demonstração.'}
             </p>
-            <button
-              onClick={() =>
-                setFilters({
-                  keyword: '',
-                  niche: undefined,
-                  format: 'all',
-                  platform: 'all',
-                  status: 'all',
-                  sortBy: 'longevity',
-                  page: 1,
-                })
-              }
-              className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors"
-            >
-              Resetar Filtros
-            </button>
+            {filters.keyword || filters.niche ? (
+              <button
+                onClick={() =>
+                  setFilters({
+                    keyword: '',
+                    niche: undefined,
+                    format: 'all',
+                    platform: 'all',
+                    status: 'all',
+                    sortBy: 'longevity',
+                    page: 1,
+                  })
+                }
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors"
+              >
+                Resetar Filtros
+              </button>
+            ) : (
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {niches.slice(0, 4).map((n) => (
+                  <button
+                    key={n.id}
+                    onClick={() => setFilters({ ...filters, niche: n.slug, page: 1 })}
+                    className="px-3.5 py-1.5 rounded-xl border border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 font-semibold text-xs hover:scale-105 transition-all"
+                  >
+                    Explorar {n.name} →
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         ) : viewMode === 'grid' ? (
           /* Cards Grid */

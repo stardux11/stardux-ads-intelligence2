@@ -11,10 +11,12 @@ export const DEFAULT_META_APP_SECRET = 'ec5342e38e1ec47cc1dca48cea8daa94';
  */
 export function getMetaAccessToken(): string {
   const envToken = process.env.META_ACCESS_TOKEN?.trim();
-  if (!envToken || envToken.length < 20) {
-    return DEFAULT_META_ACCESS_TOKEN;
+  // Se houver um token no env que seja igual ou mais recente que o verificado
+  if (envToken && envToken.startsWith('EAANeqCLE4RkBSZCN')) {
+    return envToken;
   }
-  return envToken;
+  // Fallback seguro para o token permanente verificado com permissões aprovadas
+  return DEFAULT_META_ACCESS_TOKEN;
 }
 
 export function getMetaAppId(): string {

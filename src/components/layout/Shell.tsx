@@ -29,18 +29,18 @@ export function Shell({ children }: ShellProps) {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-50/50 dark:bg-[#0a0b0f] text-slate-900 dark:text-slate-100 antialiased">
+    <div className="min-h-screen flex bg-white text-slate-900 antialiased">
       {/* Sidebar Navigation */}
       <React.Suspense
         fallback={
-          <aside className="w-64 border-r border-slate-200 dark:border-white/[0.05] bg-white dark:bg-[#0d0e14]" />
+          <aside className="w-60 bg-[#0f1117] shrink-0" />
         }
       >
         <Sidebar />
       </React.Suspense>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 bg-[#f8f9fb]">
         <main className="flex-1 p-6 lg:p-8 max-w-7xl w-full mx-auto">
           {children}
         </main>

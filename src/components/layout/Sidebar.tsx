@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -11,60 +11,59 @@ import {
   Sparkles,
   BookmarkCheck,
   FileSpreadsheet,
-  Cable,
   Settings,
   Zap,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/explorar', label: 'Explorar Anúncios', icon: Search, badge: 'Principal' },
+  { href: '/explorar', label: 'Explorar Anúncios', icon: Search },
   { href: '/concorrentes', label: 'Concorrentes', icon: Users2 },
   { href: '/projetos', label: 'Projetos de Pesquisa', icon: FolderKanban },
-  { href: '/ia-analista', label: 'Analista Criativo IA', icon: Sparkles, highlight: true },
+  { href: '/ia-analista', label: 'Analista Criativo IA', icon: Sparkles },
   { href: '/biblioteca', label: 'Biblioteca & Favoritos', icon: BookmarkCheck },
-  { href: '/relatorios', label: 'Relatórios Estratégicos', icon: FileSpreadsheet },
-  { href: '/integracoes', label: 'Conectores & Fontes', icon: Cable },
+  { href: '/relatorios', label: 'Relatórios', icon: FileSpreadsheet },
   { href: '/configuracoes', label: 'Configurações', icon: Settings },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [isDark, setIsDark] = useState(false);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.classList.toggle('dark', next);
+  };
 
   return (
-    <aside className="w-64 border-r border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0d0e14] flex flex-col h-screen sticky top-0 z-30 transition-all select-none">
+    <aside className="w-60 bg-[#0f1117] flex flex-col h-screen sticky top-0 z-30 select-none shrink-0">
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-100 dark:border-white/[0.05] flex items-center justify-between">
-        <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-lg transition-transform group-hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, #04C4D9 0%, #7C3AED 100%)' }}
-          >
-            <Zap className="w-5 h-5 fill-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-[15px] tracking-tight text-slate-900 dark:text-white">STARDUX</span>
-              <span
-                className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
-                style={{ background: 'rgba(4,196,217,0.12)', color: '#04C4D9' }}
-              >
-                ADS
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium leading-none mt-0.5">
-              Ad Intelligence
-            </p>
-          </div>
-        </Link>
+      <div className="px-5 py-5 flex items-center gap-3">
+        <div
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-white shrink-0"
+          style={{ background: 'linear-gradient(135deg, #04C4D9 0%, #7C3AED 100%)' }}
+        >
+          <Zap className="w-4 h-4 fill-white" />
+        </div>
+        <div>
+          <p className="font-bold text-sm text-white leading-tight tracking-tight">Stardux ADS</p>
+          <p className="text-[11px] text-slate-500 leading-tight">Ad Intelligence</p>
+        </div>
       </div>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-        <div className="px-3 py-2 text-[10px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest">
-          Inteligência & Pesquisa
-        </div>
+      {/* Section Label */}
+      <div className="px-5 pb-1">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
+          Menu Principal
+        </p>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -76,73 +75,56 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all group relative overflow-hidden',
+                'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 group',
                 isActive
-                  ? 'font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-white/[0.04]'
+                  ? 'bg-white/10 text-white font-medium'
+                  : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
               )}
-              style={
-                isActive
-                  ? {
-                      background:
-                        'linear-gradient(135deg, rgba(4,196,217,0.14) 0%, rgba(124,58,237,0.08) 100%)',
-                      borderLeft: '2.5px solid #04C4D9',
-                    }
-                  : {}
-              }
             >
-              <div className="flex items-center gap-3">
-                <Icon
-                  className={cn(
-                    'w-4 h-4 transition-colors shrink-0',
-                    isActive
-                      ? 'text-[#04C4D9]'
-                      : 'text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300'
-                  )}
-                />
-                <span className={isActive ? 'text-slate-900 dark:text-white' : ''}>
-                  {item.label}
-                </span>
-              </div>
-              {item.badge && (
-                <span className="text-[10px] font-semibold bg-slate-100 dark:bg-white/[0.06] text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-md">
-                  {item.badge}
-                </span>
-              )}
-              {item.highlight && (
-                <span
-                  className="text-[10px] font-bold px-1.5 py-0.5 rounded-md"
-                  style={{ background: 'rgba(124,58,237,0.12)', color: '#7C3AED' }}
-                >
-                  IA
-                </span>
-              )}
+              <Icon
+                className={cn(
+                  'w-4 h-4 shrink-0 transition-colors',
+                  isActive ? 'text-[#04C4D9]' : 'text-slate-500 group-hover:text-slate-300'
+                )}
+              />
+              <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      {/* User / Workspace Footer */}
-      <div className="p-3 border-t border-slate-100 dark:border-white/[0.05] flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
+      {/* Footer */}
+      <div className="px-3 pb-4 space-y-1 border-t border-white/[0.06] pt-3">
+        {/* Dark mode toggle */}
+        <button
+          onClick={toggleTheme}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-white/[0.06] transition-all"
+        >
+          {isDark ? (
+            <Sun className="w-4 h-4 text-slate-500" />
+          ) : (
+            <Moon className="w-4 h-4 text-slate-500" />
+          )}
+          <span>{isDark ? 'Modo claro' : 'Modo escuro'}</span>
+        </button>
+
+        {/* User info */}
+        <div className="flex items-center gap-2.5 px-3 py-2">
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white shadow"
+            className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0"
             style={{ background: 'linear-gradient(135deg, #04C4D9, #7C3AED)' }}
           >
             SX
           </div>
-          <div className="text-xs">
-            <p className="font-semibold text-slate-800 dark:text-slate-200 leading-tight">
-              Agência Stardux
-            </p>
-            <p className="text-[11px] text-slate-400 dark:text-slate-500">Workspace Interno</p>
+          <div className="min-w-0">
+            <p className="text-xs font-semibold text-slate-300 truncate leading-tight">Agência Stardux</p>
+            <p className="text-[10px] text-slate-600 truncate leading-tight">Workspace Interno</p>
           </div>
+          <div
+            className="w-1.5 h-1.5 rounded-full shrink-0 ml-auto"
+            style={{ background: '#04C4D9' }}
+          />
         </div>
-        <div
-          className="w-2 h-2 rounded-full"
-          style={{ background: '#04C4D9', boxShadow: '0 0 6px rgba(4,196,217,0.6)' }}
-          title="Sistema Operacional"
-        />
       </div>
     </aside>
   );

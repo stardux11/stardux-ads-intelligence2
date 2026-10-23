@@ -29,7 +29,7 @@ export function Shell({ children }: ShellProps) {
   };
 
   return (
-    <div className="min-h-screen flex bg-white text-slate-900 antialiased">
+    <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
       {/* Sidebar Navigation */}
       <React.Suspense
         fallback={
@@ -40,7 +40,7 @@ export function Shell({ children }: ShellProps) {
       </React.Suspense>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-[#f8f9fb]">
+      <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 p-6 lg:p-8 max-w-7xl w-full mx-auto">
           {children}
         </main>

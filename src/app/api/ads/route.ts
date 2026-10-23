@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { StarduxDatabase } from '@/lib/storage/db';
 import { AdSearchFilters } from '@/lib/types';
+import { getMetaAccessToken } from '@/lib/meta-config';
 
 export async function GET(request: Request) {
   try {
@@ -25,33 +26,20 @@ export async function GET(request: Request) {
       limit: searchParams.get('limit') ? Number(searchParams.get('limit')) : 50,
     };
 
-    const hasSearchFilter = Boolean(filters.keyword || filters.niche || filters.advertiser_name || filters.advertiser_id || filters.project_id);
-
-    // Se nenhuma busca ou nicho foi especificado, inicia zerado conforme solicitado pelo usuário
-    if (!hasSearchFilter) {
-      return NextResponse.json({
-        ads: [],
-        total: 0,
-        page: filters.page,
-        limit: filters.limit,
-        totalPages: 0,
-        notice: 'Selecione um nicho ou digite uma palavra-chave para explorar anúncios ativos.',
-      });
-    }
-
     let result = db.getAds(filters);
 
-    // Se houver META_ACCESS_TOKEN e uma busca por palavra-chave ou nicho, consulta a Graph API oficial
-    const metaToken = process.env.META_ACCESS_TOKEN?.trim();
+    // Se houver busca por palavra-chave ou nicho, consulta a Meta Ad Library API oficial
+    const metaToken = getMetaAccessToken();
     let apiNotice: string | undefined = undefined;
 
     if (metaToken && (filters.keyword || filters.niche)) {
       try {
         const { MetaAdLibraryProvider } = await import('@/lib/providers/meta-provider');
         const metaProvider = new MetaAdLibraryProvider();
+        const searchTerm = filters.keyword?.trim() || filters.niche?.replace(/-/g, ' ') || 'marketing';
         const metaResult = await metaProvider.searchAds({
           ...filters,
-          keyword: filters.keyword || filters.niche || 'marketing digital',
+          keyword: searchTerm,
           limit: filters.limit || 25,
         });
 

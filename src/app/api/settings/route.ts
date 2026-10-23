@@ -1,15 +1,18 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { getMetaAccessToken, getMetaAppId } from '@/lib/meta-config';
 
 export async function GET() {
   try {
-    const metaAppId = process.env.META_APP_ID || '';
-    const metaToken = process.env.META_ACCESS_TOKEN || '';
+    const metaAppId = getMetaAppId();
+    const metaToken = getMetaAccessToken();
     const hasSecret = Boolean(process.env.META_APP_SECRET);
 
     // Valida o token atual
     let tokenInfo: any = null;
+    let adLibraryInfo: any = null;
+
     if (metaToken && metaToken.length > 20) {
       try {
         const res = await fetch(`https://graph.facebook.com/debug_token?input_token=${metaToken}&access_token=${metaToken}`);
@@ -33,6 +36,44 @@ export async function GET() {
       } catch (err: any) {
         console.warn('Erro ao validar token da Meta:', err);
       }
+
+      // Testa diretamente o acesso ao endpoint ads_archive
+      try {
+        const testUrl = new URL('https://graph.facebook.com/v21.0/ads_archive');
+        testUrl.searchParams.set('access_token', metaToken);
+        testUrl.searchParams.set('ad_reached_countries', JSON.stringify(['BR']));
+        testUrl.searchParams.set('ad_active_status', 'ACTIVE');
+        testUrl.searchParams.set('search_terms', 'marketing');
+        testUrl.searchParams.set('limit', '1');
+
+        const resAdLib = await fetch(testUrl.toString());
+        const dataAdLib = await resAdLib.json();
+
+        if (resAdLib.ok && !dataAdLib.error) {
+          adLibraryInfo = {
+            hasAccess: true,
+            status: 'operational',
+            message: 'Acesso à Ad Library API verificado e ativo!',
+          };
+        } else {
+          const err = dataAdLib.error || {};
+          adLibraryInfo = {
+            hasAccess: false,
+            status: 'permission_denied',
+            code: err.code,
+            subcode: err.error_subcode,
+            title: err.error_user_title || 'Autorização necessária',
+            userMsg: err.error_user_msg || err.message,
+            message: err.message,
+          };
+        }
+      } catch (err: any) {
+        adLibraryInfo = {
+          hasAccess: false,
+          status: 'network_error',
+          message: `Erro ao testar ads_archive: ${err.message}`,
+        };
+      }
     }
 
     return NextResponse.json({
@@ -41,6 +82,7 @@ export async function GET() {
       hasToken: Boolean(metaToken),
       hasSecret,
       tokenInfo,
+      adLibraryInfo,
       geminiConfigured: Boolean(process.env.GEMINI_API_KEY),
     });
   } catch (err: any) {

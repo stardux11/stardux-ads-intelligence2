@@ -22,22 +22,31 @@ export default function ConfiguracoesPage() {
   const [metaAppId, setMetaAppId] = useState('');
   const [metaAppSecret, setMetaAppSecret] = useState('');
   const [tokenInfo, setTokenInfo] = useState<any>(null);
+  const [adLibraryInfo, setAdLibraryInfo] = useState<any>(null);
   const [savedSuccess, setSavedSuccess] = useState<string | null>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
   const [hasConfiguredToken, setHasConfiguredToken] = useState(false);
   const [maskedToken, setMaskedToken] = useState('');
 
-  useEffect(() => {
+  const loadSettings = () => {
+    setIsTesting(true);
     fetch('/api/settings')
       .then((r) => r.json())
       .then((data) => {
         if (data.metaAppId) setMetaAppId(data.metaAppId);
         if (data.tokenInfo) setTokenInfo(data.tokenInfo);
+        if (data.adLibraryInfo) setAdLibraryInfo(data.adLibraryInfo);
         if (data.hasToken) setHasConfiguredToken(true);
         if (data.metaToken) setMaskedToken(data.metaToken);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setIsTesting(false));
+  };
+
+  useEffect(() => {
+    loadSettings();
   }, []);
 
   const handleSaveKeys = async (e: React.FormEvent) => {
@@ -213,40 +222,102 @@ export default function ConfiguracoesPage() {
                 Chaves de API & Conexão Meta Oficial
               </h3>
             </div>
-            {tokenInfo && (
-              <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
-                tokenInfo.isValid 
-                  ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800'
-                  : 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 border border-rose-300 dark:border-rose-800'
-              }`}>
-                {tokenInfo.isValid ? <Check className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-                <span>{tokenInfo.isValid ? 'Token Ativo e Autenticado' : 'Token Expirado ou Inválido'}</span>
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={loadSettings}
+                disabled={isTesting}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-[11px] text-slate-600 dark:text-slate-300 font-medium transition-colors"
+                title="Executar teste ao vivo na Graph API e na Ad Library"
+              >
+                <RefreshCw className={`w-3 h-3 ${isTesting ? 'animate-spin text-emerald-500' : ''}`} />
+                <span>{isTesting ? 'Testando...' : 'Testar Conexão'}</span>
+              </button>
+
+              {tokenInfo && (
+                <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                  tokenInfo.isValid 
+                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800'
+                    : 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 border border-rose-300 dark:border-rose-800'
+                }`}>
+                  {tokenInfo.isValid ? <Check className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                  <span>{tokenInfo.isValid ? 'Token Meta Válido' : 'Token Inválido'}</span>
+                </span>
+              )}
+            </div>
           </div>
 
           {tokenInfo && (
-            <div className={`p-3.5 rounded-xl border space-y-1.5 text-[11px] ${
-              tokenInfo.isValid
-                ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200/60 dark:border-emerald-800/40'
-                : 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200/80 dark:border-rose-900/60'
-            }`}>
-              {tokenInfo.application && (
+            <div className="space-y-2">
+              <div className={`p-3.5 rounded-xl border space-y-1.5 text-[11px] ${
+                tokenInfo.isValid
+                  ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200/60 dark:border-emerald-800/40'
+                  : 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200/80 dark:border-rose-900/60'
+              }`}>
+                {tokenInfo.application && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">App Meta Conectado:</span>
+                    <strong className="text-slate-900 dark:text-white font-mono">{tokenInfo.application} (ID: {tokenInfo.appId})</strong>
+                  </div>
+                )}
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500">App Meta Conectado:</span>
-                  <strong className="text-slate-900 dark:text-white font-mono">{tokenInfo.application} (ID: {tokenInfo.appId})</strong>
+                  <span className="text-slate-500">Validade do Token:</span>
+                  <strong className={tokenInfo.isValid ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400 font-bold'}>
+                    {tokenInfo.expiresAt}
+                  </strong>
                 </div>
-              )}
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500">Validade do Token:</span>
-                <strong className={tokenInfo.isValid ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400 font-bold'}>
-                  {tokenInfo.expiresAt}
-                </strong>
+                {tokenInfo.scopes && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Permissões do Token:</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-mono text-[10px]">
+                      {Array.isArray(tokenInfo.scopes) ? tokenInfo.scopes.join(', ') : tokenInfo.scopes}
+                    </span>
+                  </div>
+                )}
+                {tokenInfo.errorMessage && (
+                  <p className="text-rose-600 dark:text-rose-400 font-medium pt-1 text-[10px]">
+                    Detalhe: {tokenInfo.errorMessage}
+                  </p>
+                )}
               </div>
-              {tokenInfo.errorMessage && (
-                <p className="text-rose-600 dark:text-rose-400 font-medium pt-1 text-[10px]">
-                  Detalhe: {tokenInfo.errorMessage}
-                </p>
+
+              {/* Status específico do endpoint Ad Library (/ads_archive) */}
+              {adLibraryInfo && (
+                <div className={`p-3.5 rounded-xl border text-[11px] space-y-2 ${
+                  adLibraryInfo.hasAccess
+                    ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200/60 dark:border-emerald-800/40 text-emerald-800 dark:text-emerald-300'
+                    : 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800/60 text-amber-900 dark:text-amber-200'
+                }`}>
+                  <div className="flex items-start gap-2">
+                    {adLibraryInfo.hasAccess ? (
+                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    )}
+                    <div className="space-y-1">
+                      <p className="font-bold">
+                        {adLibraryInfo.hasAccess
+                          ? 'Endpoint Ad Library (/ads_archive): Liberado e Operacional'
+                          : `Ad Library (/ads_archive): ${adLibraryInfo.title || 'Autorização Requerida'} (Subcódigo ${adLibraryInfo.subcode || adLibraryInfo.code || ''})`}
+                      </p>
+                      <p className="text-[11px] leading-relaxed opacity-90">
+                        {adLibraryInfo.hasAccess
+                          ? 'Seu token tem permissão completa para buscar anúncios na API da Biblioteca da Meta.'
+                          : adLibraryInfo.userMsg || adLibraryInfo.message}
+                      </p>
+                      {!adLibraryInfo.hasAccess && (
+                        <div className="mt-2 p-2.5 rounded-lg bg-amber-100/70 dark:bg-amber-900/40 text-[10px] space-y-1 text-slate-800 dark:text-slate-200">
+                          <p className="font-semibold text-amber-900 dark:text-amber-300">Como resolver no Meta for Developers:</p>
+                          <ol className="list-decimal list-inside space-y-0.5">
+                            <li>Confirme sua identidade pessoal com documento em <a href="https://www.facebook.com/ID" target="_blank" rel="noreferrer" className="underline font-bold text-amber-800 dark:text-amber-300">facebook.com/ID</a></li>
+                            <li>Acesse <a href="https://www.facebook.com/ads/library/api" target="_blank" rel="noreferrer" className="underline font-bold text-amber-800 dark:text-amber-300">facebook.com/ads/library/api</a> e vincule seu aplicativo</li>
+                            <li>Dica: enquanto a Meta analisa a verificação, você pode usar normalmente a <strong>Importação Manual / CSV</strong> na aba Anúncios.</li>
+                          </ol>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           )}

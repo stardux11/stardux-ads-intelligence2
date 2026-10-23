@@ -61,13 +61,13 @@ export class StarduxDatabase {
       console.warn('Erro ao ler .stardux-data/stardux-db.json, inicializando com dados padrão:', err);
     }
 
-    // Inicialização limpa padrão (0 anúncios fictícios)
+    // Inicialização com anúncios e dados iniciais
     const initialState: StarduxDBState = {
       niches: [...INITIAL_NICHES],
-      projects: [],
-      advertisers: [],
-      ads: [],
-      collections: [],
+      projects: [...INITIAL_PROJECTS],
+      advertisers: [...INITIAL_ADVERTISERS],
+      ads: [...INITIAL_ADS],
+      collections: [...INITIAL_COLLECTIONS],
       collectionItems: [],
       reports: [],
       lastUpdated: new Date().toISOString(),

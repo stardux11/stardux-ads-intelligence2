@@ -1,13 +1,14 @@
 import { IDataProvider, ProviderStatus } from './types';
 import { Ad, AdSearchFilters } from '../types';
 import { calculateISC } from '../isc';
+import { getMetaAccessToken } from '../meta-config';
 
 export class MetaAdLibraryProvider implements IDataProvider {
   id = 'meta_ad_library';
   name = 'Meta Ad Library API (Oficial)';
 
   async getStatus(): Promise<ProviderStatus> {
-    const token = process.env.META_ACCESS_TOKEN?.trim();
+    const token = getMetaAccessToken();
     const isConfigured = Boolean(token && token.length > 10);
 
     return {
@@ -30,7 +31,7 @@ export class MetaAdLibraryProvider implements IDataProvider {
   }
 
   async searchAds(filters: AdSearchFilters): Promise<{ ads: Ad[]; totalCount: number; notice?: string }> {
-    const token = process.env.META_ACCESS_TOKEN?.trim();
+    const token = getMetaAccessToken();
 
     if (!token) {
       return {
@@ -54,10 +55,17 @@ export class MetaAdLibraryProvider implements IDataProvider {
       const res = await fetch(url.toString());
       if (!res.ok) {
         const errorData = await res.json();
+        const err = errorData.error || {};
+        let message = err.message || 'Falha ao consultar a API oficial';
+
+        if (err.error_subcode === 2332002 || err.code === 10) {
+          message = `Permissão da Ad Library API necessária: ${err.error_user_msg || 'Para acessar a API, é necessário confirmar sua identidade em facebook.com/ID e registrar o App em facebook.com/ads/library/api.'}`;
+        }
+
         return {
           ads: [],
           totalCount: 0,
-          notice: `Aviso da API Meta: ${errorData.error?.message || 'Falha ao consultar a API oficial'}.`,
+          notice: `Aviso da API Meta: ${message}`,
         };
       }
 

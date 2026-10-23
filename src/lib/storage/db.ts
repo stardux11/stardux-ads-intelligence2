@@ -144,6 +144,11 @@ export class StarduxDatabase {
       list = list.filter(a => a.days_active_observed >= (filters.minDaysActive || 0));
     }
 
+    // Filtro de país: aplica sempre que country != 'ALL'
+    if (filters.country && filters.country !== 'ALL') {
+      list = list.filter(a => !a.country || a.country === filters.country);
+    }
+
     if (filters.onlyDemo) {
       list = list.filter(a => a.is_demo);
     }

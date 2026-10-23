@@ -68,6 +68,8 @@ export class MetaAdLibraryProvider implements IDataProvider {
           'ad_creative_link_captions',
           'ad_creative_link_titles',
           'ad_creative_link_descriptions',
+          'ad_creative_images',
+          'ad_creative_videos',
           'page_name',
           'page_id',
           'publisher_platforms',
@@ -124,30 +126,47 @@ export class MetaAdLibraryProvider implements IDataProvider {
         const snapshotUrl = item.ad_snapshot_url || '';
         const pageId = item.page_id ? String(item.page_id) : '';
 
-        // Detecção inteligente de formato
+        // Extrai URLs reais de imagem/vídeo quando disponíveis
+        const images: string[] = Array.isArray(item.ad_creative_images)
+          ? item.ad_creative_images.filter(Boolean)
+          : [];
+        const videos: string[] = Array.isArray(item.ad_creative_videos)
+          ? item.ad_creative_videos.filter(Boolean)
+          : [];
+
+        // Detecção de formato: campos reais têm prioridade sobre heurísticas de texto
         let format: 'image' | 'video' | 'carousel' = 'image';
-        const fullText = (headline + ' ' + bodyText + ' ' + description).toLowerCase();
-        if (
-          fullText.includes('vídeo') ||
-          fullText.includes('video') ||
-          fullText.includes('assista') ||
-          fullText.includes('dublado') ||
-          fullText.includes('trailer') ||
-          fullText.includes('episódio') ||
-          fullText.includes('filme') ||
-          fullText.includes('série')
-        ) {
+        if (videos.length > 0) {
           format = 'video';
-        } else if (fullText.includes('arraste') || fullText.includes('carrossel') || fullText.includes('deslize')) {
+        } else if (images.length > 1) {
           format = 'carousel';
+        } else {
+          const fullText = (headline + ' ' + bodyText + ' ' + description).toLowerCase();
+          if (
+            fullText.includes('vídeo') ||
+            fullText.includes('video') ||
+            fullText.includes('assista') ||
+            fullText.includes('dublado') ||
+            fullText.includes('trailer') ||
+            fullText.includes('episódio') ||
+            fullText.includes('filme') ||
+            fullText.includes('série')
+          ) {
+            format = 'video';
+          } else if (fullText.includes('arraste') || fullText.includes('carrossel') || fullText.includes('deslize')) {
+            format = 'carousel';
+          }
         }
 
-        // Avatar oficial da página do Facebook
+        // Media URL real: prioriza imagem/vídeo direto, fallback vazio (não usa snapshot como media)
+        const realMediaUrl = images[0] || videos[0] || '';
+
+        // Avatar oficial da página do Facebook como thumbnail
         const pageAvatarUrl = pageId ? `https://graph.facebook.com/${pageId}/picture?type=large` : '';
 
         const isc = calculateISC({
           daysActive,
-          variationCount: 1,
+          variationCount: Math.max(1, images.length + videos.length),
           advertiserActiveAdsCount: 1,
           format,
           platforms: platforms as any,
@@ -178,9 +197,9 @@ export class MetaAdLibraryProvider implements IDataProvider {
           description,
           cta_text: 'Saiba mais',
           destination_url: item.ad_creative_link_captions?.[0] ? `https://${item.ad_creative_link_captions[0]}` : '',
-          media_url: snapshotUrl,
-          thumbnail_url: pageAvatarUrl,
-          snapshot_url: snapshotUrl,
+          media_url: realMediaUrl,       // URL real de imagem/vídeo se disponível
+          thumbnail_url: pageAvatarUrl,  // Avatar da página como thumbnail
+          snapshot_url: snapshotUrl,     // URL do snapshot oficial da Meta para preview
           isc_score: isc.totalScore,
           isc_breakdown: isc,
           is_demo: false,

@@ -174,15 +174,53 @@ export function AdDetailModal({
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
               {/* Media Preview Column */}
               <div className="md:col-span-5 space-y-3">
-                <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 relative group aspect-square flex items-center justify-center p-6 text-center">
-                  {ad.media_url && !ad.media_url.includes('render_ad') && !ad.media_url.includes('snapshot_url') ? (
+              <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 relative group aspect-square flex items-center justify-center p-0 text-center">
+                  {ad.media_url && !ad.media_url.includes('render_ad') && !ad.media_url.includes('snapshot_url') && !ad.media_url.includes('facebook.com/ads') ? (
                     <img
                       src={ad.media_url}
                       alt={ad.headline}
                       className="w-full h-full object-cover rounded-lg"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
+                  ) : ad.thumbnail_url ? (
+                    /* Preview visual com foto da página anunciante */
+                    <div className="w-full h-full relative">
+                      {/* Fundo desfocado */}
+                      <img
+                        src={ad.thumbnail_url}
+                        alt={ad.advertiser_name}
+                        className="absolute inset-0 w-full h-full object-cover opacity-15 blur-md scale-110"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 to-slate-950/90" />
+
+                      <div className="relative z-10 flex flex-col items-center justify-center h-full gap-3 p-6">
+                        <img
+                          src={ad.thumbnail_url}
+                          alt={ad.advertiser_name}
+                          className="w-20 h-20 rounded-full object-cover border-2 border-white/20 shadow-2xl"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                        <div className="text-center">
+                          <p className="text-white font-bold text-sm">{ad.advertiser_name}</p>
+                          <p className="text-slate-400 text-xs mt-1">
+                            {ad.format === 'video' ? 'Criativo em Vídeo' : ad.format === 'carousel' ? 'Carrossel de Criativos' : 'Criativo de Imagem'}
+                          </p>
+                        </div>
+
+                        <a
+                          href={ad.snapshot_url || ad.original_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 transition-all"
+                        >
+                          <span>Ver Criativo na Meta</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
+                    </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center gap-3">
+                    <div className="flex flex-col items-center justify-center gap-3 p-6">
                       <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center">
                         {ad.format === 'video' ? (
                           <div className="text-2xl font-bold ml-1">▶</div>
@@ -195,7 +233,7 @@ export function AdDetailModal({
                           {ad.format === 'video' ? 'Criativo em Vídeo' : ad.format === 'carousel' ? 'Carrossel de Criativos' : 'Criativo de Imagem'}
                         </h5>
                         <p className="text-[11px] text-slate-400 mt-1 max-w-[220px]">
-                          Para reproduzir o vídeo em alta definição com áudio ou navegar pelos cards do carrossel, abra na Biblioteca Oficial.
+                          Para reproduzir em alta definição com áudio, abra na Biblioteca Oficial.
                         </p>
                       </div>
 

@@ -48,19 +48,78 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
         onClick={() => onOpenDetail(ad)}
         className="aspect-[16/10] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 relative cursor-pointer overflow-hidden flex items-center justify-center border-b border-slate-100 dark:border-slate-800/80 group"
       >
-        {/* Se houver imagem direta (ex: CDN ou imagem real) */}
-        {ad.media_url && !ad.media_url.includes('render_ad') && !ad.media_url.includes('snapshot_url') ? (
+        {/* Mídia real direta (ex: imagem do CDN) */}
+        {ad.media_url && !ad.media_url.includes('render_ad') && !ad.media_url.includes('snapshot_url') && !ad.media_url.includes('facebook.com/ads') ? (
           <img
             src={ad.media_url}
             alt={ad.headline}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
           />
+        ) : ad.thumbnail_url ? (
+          /* Foto da página anunciante como preview visual */
+          <div className="w-full h-full relative">
+            {/* Thumbnail/avatar da página como fundo com blur */}
+            <img
+              src={ad.thumbnail_url}
+              alt={ad.advertiser_name}
+              className="absolute inset-0 w-full h-full object-cover opacity-20 blur-sm scale-110"
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+            {/* Overlay de gradiente */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-950/90" />
+
+            {/* Conteúdo central */}
+            <div className="relative z-10 w-full h-full flex flex-col items-center justify-center gap-2 p-4 text-center">
+              {/* Avatar da página centralizado */}
+              <img
+                src={ad.thumbnail_url}
+                alt={ad.advertiser_name}
+                className="w-14 h-14 rounded-full object-cover border-2 border-white/20 shadow-xl group-hover:scale-110 transition-transform duration-200"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              />
+              <span className="text-[11px] font-semibold text-white/90 truncate max-w-[160px]">
+                {ad.advertiser_name}
+              </span>
+
+              {/* Ícone de formato */}
+              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                ad.format === 'video'
+                  ? 'bg-emerald-500/80 text-white'
+                  : ad.format === 'carousel'
+                  ? 'bg-indigo-500/80 text-white'
+                  : 'bg-white/15 text-white/80'
+              }`}>
+                {getFormatIcon()}
+                <span>{ad.format === 'video' ? 'Vídeo' : ad.format === 'carousel' ? 'Carrossel' : 'Imagem'}</span>
+              </div>
+
+              {/* Botão de ação */}
+              <a
+                href={ad.snapshot_url || ad.original_url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-emerald-500/90 text-white text-[10px] font-medium backdrop-blur-md border border-white/15 transition-all mt-0.5"
+              >
+                <span>Ver Criativo</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+
+            {/* Badge Oficial Meta */}
+            <div className="absolute bottom-2 right-2 text-[9px] text-emerald-400 font-semibold bg-emerald-950/70 border border-emerald-500/30 px-1.5 py-0.5 rounded z-10">
+              Oficial Meta
+            </div>
+          </div>
         ) : (
-          /* Creative Stage Oficial da Meta */
+          /* Creative Stage Fallback */
           <div className="w-full h-full relative flex flex-col items-center justify-center p-4 text-center select-none">
             {/* Background Decorativo */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-transparent opacity-70" />
-            
+
             {/* Ícone Central por Formato */}
             <div className="relative z-10 flex flex-col items-center gap-2">
               {ad.format === 'video' ? (
@@ -109,20 +168,9 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
             {/* Bottom Advertiser Brand Bar */}
             <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between text-left z-10">
               <div className="flex items-center gap-2 max-w-[75%]">
-                {ad.thumbnail_url ? (
-                  <img
-                    src={ad.thumbnail_url}
-                    alt={ad.advertiser_name}
-                    className="w-5 h-5 rounded-full object-cover border border-white/20 shrink-0"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                ) : (
-                  <div className="w-5 h-5 rounded-full bg-white/10 text-[9px] font-bold text-white flex items-center justify-center shrink-0">
-                    {ad.advertiser_name.charAt(0)}
-                  </div>
-                )}
+                <div className="w-5 h-5 rounded-full bg-white/10 text-[9px] font-bold text-white flex items-center justify-center shrink-0">
+                  {ad.advertiser_name.charAt(0)}
+                </div>
                 <span className="text-[10px] text-slate-300 truncate font-medium">
                   {ad.advertiser_name}
                 </span>
@@ -133,6 +181,7 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
             </div>
           </div>
         )}
+
 
         {/* Format Badge */}
         {ad.format === 'video' && (

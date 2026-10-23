@@ -85,23 +85,24 @@ export function Topbar({ onOpenImportCsv, onOpenCreateAd, onDemoDataAction }: To
   };
 
   return (
-    <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20">
+    <header className="h-16 border-b border-slate-200 dark:border-white/[0.05] bg-white/90 dark:bg-[#0d0e14]/90 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20">
       {/* Status Notice or System Tag */}
       <div className="flex items-center gap-3">
         {statusMessage ? (
-          <div className="flex items-center gap-2 text-xs font-medium text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-3 py-1.5 rounded-lg border border-emerald-200/60 dark:border-emerald-800/60 animate-in fade-in">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border animate-in fade-in" style={{color: '#04C4D9', background: 'rgba(4,196,217,0.08)', borderColor: 'rgba(4,196,217,0.2)'}}>
+            <CheckCircle2 className="w-4 h-4" style={{color: '#04C4D9'}} />
             <span>{statusMessage}</span>
           </div>
         ) : (
           <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="w-2 h-2 rounded-full animate-pulse" style={{background: '#04C4D9'}} />
             <span>Região: <strong className="text-slate-700 dark:text-slate-300">Brasil (Meta Ads)</strong></span>
             <span className="text-slate-300 dark:text-slate-700">•</span>
             <span>Longevidade & Sinais Observáveis</span>
           </div>
         )}
       </div>
+
 
       {/* Action Buttons */}
       <div className="flex items-center gap-2.5">
@@ -152,7 +153,8 @@ export function Topbar({ onOpenImportCsv, onOpenCreateAd, onDemoDataAction }: To
         {onOpenCreateAd && (
           <button
             onClick={onOpenCreateAd}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs shadow-emerald-600/20 transition-all hover:scale-[1.02]"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] hover:opacity-90"
+            style={{ background: 'linear-gradient(135deg, #04C4D9, #7C3AED)' }}
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>Novo Anúncio</span>

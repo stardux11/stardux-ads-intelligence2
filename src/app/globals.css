@@ -1,88 +1,157 @@
 @import "tailwindcss";
 
+/* ─── Stardux Brand Design System ─────────────────────────────────────────── */
+/* Colors: Base #0A0B0F • Cyan #04C4D9 • Violet #7C3AED • Rose #D91A83 • Green #10B981 */
+/* Type: Bricolage Grotesque (headings) • DM Sans (body) */
+
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    --background: 220 20% 97%;
+    --foreground: 222 47% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 222 47% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 158 64% 42%; /* Stardux Emerald */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 158 64% 42%;
-    --accent-foreground: 222 47% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 158 64% 42%;
-    --radius: 0.625rem;
+    --popover-foreground: 222 47% 8%;
+    --primary: 186 97% 44%; /* Stardux Cyan #04C4D9 */
+    --primary-foreground: 222 47% 6%;
+    --secondary: 220 14% 94%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 14% 94%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 262 83% 58%; /* Stardux Violet #7C3AED */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 335 82% 48%; /* Stardux Rose #D91A83 */
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
+    --ring: 186 97% 44%;
+    --radius: 0.75rem;
+    /* Brand tokens */
+    --brand-cyan: #04C4D9;
+    --brand-violet: #7C3AED;
+    --brand-rose: #D91A83;
+    --brand-green: #10B981;
+    --brand-dark: #0A0B0F;
   }
 
   .dark {
-    --background: 222 47% 7%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 158 64% 45%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 14%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 158 64% 45%;
+    --background: 230 17% 5%;
+    --foreground: 210 40% 96%;
+    --card: 228 18% 7%;
+    --card-foreground: 210 40% 96%;
+    --popover: 228 18% 7%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 186 97% 48%;
+    --primary-foreground: 222 47% 6%;
+    --secondary: 222 18% 12%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 222 18% 10%;
+    --muted-foreground: 215 16% 58%;
+    --accent: 262 83% 62%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 335 82% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 18% 13%;
+    --input: 222 18% 13%;
+    --ring: 186 97% 48%;
   }
 }
 
+/* ─── Base Styles ─────────────────────────────────────────────────────────── */
 body {
-  background-color: #f8fafc;
+  background-color: #f1f5f9;
   color: #0f172a;
   font-family: var(--font-sans), sans-serif;
   font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading), sans-serif;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
 .dark body {
   background-color: #0a0b0f;
-  color: #f8fafc;
+  color: #f1f5f9;
 }
 
-/* Glassmorphism helpers */
+/* ─── Glassmorphism ───────────────────────────────────────────────────────── */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(226, 232, 240, 0.75);
 }
 
 .dark .glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.5);
+  background: rgba(10, 11, 15, 0.82);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Custom Scrollbar */
+/* ─── Brand Gradient Utilities ────────────────────────────────────────────── */
+.stardux-gradient {
+  background: linear-gradient(135deg, #04C4D9 0%, #7C3AED 50%, #D91A83 100%);
+}
+
+.stardux-gradient-text {
+  background: linear-gradient(135deg, #04C4D9 0%, #7C3AED 60%, #D91A83 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stardux-glow-cyan {
+  box-shadow: 0 0 32px rgba(4, 196, 217, 0.15), 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.dark .stardux-glow-cyan {
+  box-shadow: 0 0 32px rgba(4, 196, 217, 0.18), 0 4px 16px rgba(0,0,0,0.35);
+}
+
+/* ─── Premium Card Styles ─────────────────────────────────────────────────── */
+.card-premium {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-premium:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 8px 32px rgba(4, 196, 217, 0.06);
+  transform: translateY(-1px);
+}
+
+.dark .card-premium {
+  background: rgba(15, 18, 28, 0.9);
+  border-color: rgba(255,255,255,0.07);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.dark .card-premium:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3), 0 8px 32px rgba(4, 196, 217, 0.08);
+}
+
+/* ─── Sidebar Active State Enhancement ───────────────────────────────────── */
+.nav-item-active {
+  background: linear-gradient(135deg, rgba(4, 196, 217, 0.12) 0%, rgba(124, 58, 237, 0.08) 100%);
+  border-left: 2px solid #04C4D9;
+}
+
+/* ─── Input Enhancements ──────────────────────────────────────────────────── */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  ring: 2px solid rgba(4, 196, 217, 0.4);
+}
+
+/* ─── Custom Scrollbar ────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -91,11 +160,46 @@ h1, h2, h3, h4, h5, h6 {
   background: #cbd5e1;
   border-radius: 9999px;
 }
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: rgba(255,255,255,0.1);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.18);
 }
 
-/* Print Stylesheet for PDF Reports */
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ─── Ambient Background Dots ─────────────────────────────────────────────── */
+.bg-dots {
+  background-image: radial-gradient(rgba(4, 196, 217, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dark .bg-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ─── Print Styles ────────────────────────────────────────────────────────── */
 @media print {
   aside, nav, header, button, .no-print {
     display: none !important;

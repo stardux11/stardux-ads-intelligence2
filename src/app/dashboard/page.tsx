@@ -81,15 +81,15 @@ export default function DashboardPage() {
     <Shell>
       <div className="space-y-8">
         {/* Header & Subtitle */}
-        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800/80 bg-gradient-to-br from-white via-slate-50 to-emerald-50/20 dark:from-slate-900/90 dark:via-[#0c0e14] dark:to-emerald-950/20 shadow-sm">
-          {/* Subtle Ambient Glow */}
-          <div className="absolute -top-16 -right-16 w-64 h-64 bg-emerald-500/10 dark:bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-cyan-500/10 dark:bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-white/[0.06] bg-gradient-to-br from-white via-slate-50/80 to-cyan-50/30 dark:from-[#0d0e14] dark:via-[#0a0b0f] dark:to-[#0d0e14] shadow-sm">
+          {/* Ambient Glow — Stardux Brand */}
+          <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full blur-3xl pointer-events-none" style={{background: 'rgba(4,196,217,0.10)'}} />
+          <div className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full blur-3xl pointer-events-none" style={{background: 'rgba(124,58,237,0.08)'}} />
 
           <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border" style={{background: 'rgba(4,196,217,0.10)', color: '#04C4D9', borderColor: 'rgba(4,196,217,0.25)'}}>
                   Stardux Ads Intelligence
                 </span>
                 <span className="text-[11px] text-slate-400">
@@ -107,7 +107,8 @@ export default function DashboardPage() {
             <div className="flex items-center gap-2.5 shrink-0">
               <Link
                 href="/explorar"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-semibold text-xs shadow-md transition-all hover:scale-[1.02] hover:opacity-90"
+                style={{ background: 'linear-gradient(135deg, #04C4D9, #7C3AED)' }}
               >
                 <Search className="w-4 h-4" />
                 <span>Explorar Anúncios</span>

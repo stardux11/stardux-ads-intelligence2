@@ -117,9 +117,23 @@ export async function POST(request: Request) {
       process.env.META_APP_SECRET = metaAppSecret.trim();
     }
 
-    if (typeof metaToken === 'string' && metaToken.trim()) {
-      envContent = updateEnvVar(envContent, 'META_ACCESS_TOKEN', metaToken.trim());
-      process.env.META_ACCESS_TOKEN = metaToken.trim();
+    let finalToken = typeof metaToken === 'string' ? metaToken.trim() : '';
+    let extendedNotice = '';
+
+    if (finalToken && finalToken.length > 20) {
+      try {
+        const { exchangeForLongLivedToken } = await import('@/lib/meta-config');
+        const exchanged = await exchangeForLongLivedToken(finalToken);
+        if (exchanged && exchanged.token) {
+          finalToken = exchanged.token;
+          extendedNotice = ' (Token estendido para validade de 60 dias!)';
+        }
+      } catch (e) {
+        console.warn('Erro ao estender token:', e);
+      }
+
+      envContent = updateEnvVar(envContent, 'META_ACCESS_TOKEN', finalToken);
+      process.env.META_ACCESS_TOKEN = finalToken;
     }
 
     if (typeof geminiKey === 'string' && geminiKey.trim()) {
@@ -129,7 +143,10 @@ export async function POST(request: Request) {
 
     fs.writeFileSync(envPath, envContent, 'utf-8');
 
-    return NextResponse.json({ success: true, message: 'Configurações e credenciais salvas com sucesso!' });
+    return NextResponse.json({
+      success: true,
+      message: `Configurações e credenciais salvas com sucesso!${extendedNotice}`,
+    });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

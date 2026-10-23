@@ -174,34 +174,40 @@ export function AdDetailModal({
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
               {/* Media Preview Column */}
               <div className="md:col-span-5 space-y-3">
-                <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 relative group aspect-square flex items-center justify-center">
-                  {ad.media_url && !ad.media_url.includes('render_ad') ? (
+                <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 relative group aspect-square flex items-center justify-center p-6 text-center">
+                  {ad.media_url && !ad.media_url.includes('render_ad') && !ad.media_url.includes('snapshot_url') ? (
                     <img
                       src={ad.media_url}
                       alt={ad.headline}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-lg"
                     />
-                  ) : ad.snapshot_url ? (
-                    <div className="w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center">
-                      <iframe
-                        src={ad.snapshot_url}
-                        title={ad.headline}
-                        className="w-full h-full border-0"
-                      />
-                    </div>
                   ) : (
-                    <div className="text-center p-6 text-slate-400">
-                      <Layers className="w-12 h-12 mx-auto mb-2 opacity-40" />
-                      <p className="text-xs font-medium">Prévia não incorporada</p>
-                      <p className="text-[10px] mt-1">Disponível na Biblioteca oficial da Meta</p>
-                    </div>
-                  )}
-
-                  {ad.format === 'video' && (
-                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-white">
-                        ▶
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center">
+                        {ad.format === 'video' ? (
+                          <div className="text-2xl font-bold ml-1">▶</div>
+                        ) : (
+                          <Layers className="w-8 h-8" />
+                        )}
                       </div>
+                      <div>
+                        <h5 className="font-bold text-white text-sm">
+                          {ad.format === 'video' ? 'Criativo em Vídeo' : ad.format === 'carousel' ? 'Carrossel de Criativos' : 'Criativo de Imagem'}
+                        </h5>
+                        <p className="text-[11px] text-slate-400 mt-1 max-w-[220px]">
+                          Para reproduzir o vídeo em alta definição com áudio ou navegar pelos cards do carrossel, abra na Biblioteca Oficial.
+                        </p>
+                      </div>
+
+                      <a
+                        href={ad.original_url || ad.snapshot_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 transition-all mt-1"
+                      >
+                        <span>Abrir Criativo na Meta</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
                     </div>
                   )}
                 </div>

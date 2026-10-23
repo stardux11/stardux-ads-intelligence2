@@ -11,6 +11,7 @@ interface AdFiltersProps {
   totalResults: number;
   viewMode: 'grid' | 'table';
   onViewModeChange: (mode: 'grid' | 'table') => void;
+  showResultsCount?: boolean;
 }
 
 export function AdFilters({
@@ -20,6 +21,7 @@ export function AdFilters({
   totalResults,
   viewMode,
   onViewModeChange,
+  showResultsCount = false,
 }: AdFiltersProps) {
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({ ...filters, keyword: e.target.value, page: 1 });
@@ -206,15 +208,17 @@ export function AdFilters({
         </div>
       </div>
 
-      {/* Results Count Banner */}
-      <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
-        <span>
-          Encontrados <strong>{totalResults}</strong> anúncios com sinais observáveis registrados
-        </span>
-        <span className="text-[11px] text-slate-400">
-          Fonte: Meta Ad Library & CSVs Verificados
-        </span>
-      </div>
+      {/* Results Count Banner - só aparece após busca */}
+      {showResultsCount && (
+        <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>
+            Encontrados <strong>{totalResults}</strong> anúncios reais na Meta Ad Library
+          </span>
+          <span className="text-[11px] text-slate-400">
+            Fonte: Meta Ad Library API Oficial
+          </span>
+        </div>
+      )}
     </div>
   );
 }

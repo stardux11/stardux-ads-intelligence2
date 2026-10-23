@@ -6,12 +6,12 @@ export const DEFAULT_META_APP_SECRET = 'ec5342e38e1ec47cc1dca48cea8daa94';
 
 /**
  * Retorna o token de acesso da Meta com fallback automático para o token verificado.
- * Evita que o app quebre em produção (Vercel) caso o env esteja vazio ou com token antigo.
+ * Token padrão: User Token de longa duração (~60 dias), verificado em 23/10/2026.
+ * Evita que o app quebre em produção caso o env esteja vazio.
  */
 export function getMetaAccessToken(): string {
   const envToken = process.env.META_ACCESS_TOKEN?.trim();
-  // Se o token for vazio ou for o token antigo do robô de sistema que dava erro 2332002:
-  if (!envToken || envToken.startsWith('EAANeqCLE4RkBSx')) {
+  if (!envToken || envToken.length < 20) {
     return DEFAULT_META_ACCESS_TOKEN;
   }
   return envToken;

@@ -54,6 +54,9 @@ export class StarduxDatabase {
         const raw = fs.readFileSync(DB_FILE, 'utf-8');
         const parsed = JSON.parse(raw);
         if (parsed.ads && Array.isArray(parsed.ads)) {
+          parsed.ads = parsed.ads.filter((a: any) => !a.is_demo);
+          parsed.advertisers = (parsed.advertisers || []).filter((adv: any) => !adv.id.startsWith('adv-'));
+          parsed.projects = (parsed.projects || []).filter((p: any) => !p.id.startsWith('proj-'));
           return parsed;
         }
       }
@@ -61,13 +64,13 @@ export class StarduxDatabase {
       console.warn('Erro ao ler .stardux-data/stardux-db.json, inicializando com dados padrão:', err);
     }
 
-    // Inicialização com anúncios e dados iniciais
+    // Inicialização 100% limpa (0 anúncios fictícios, apenas dados reais da Meta)
     const initialState: StarduxDBState = {
       niches: [...INITIAL_NICHES],
-      projects: [...INITIAL_PROJECTS],
-      advertisers: [...INITIAL_ADVERTISERS],
-      ads: [...INITIAL_ADS],
-      collections: [...INITIAL_COLLECTIONS],
+      projects: [],
+      advertisers: [],
+      ads: [],
+      collections: [],
       collectionItems: [],
       reports: [],
       lastUpdated: new Date().toISOString(),

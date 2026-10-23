@@ -43,55 +43,122 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
 
   return (
     <div className="group rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs hover:shadow-xl hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 flex flex-col overflow-hidden relative">
-      {/* Top Media / Thumbnail Section */}
+      {/* Top Media / Creative Section */}
       <div
         onClick={() => onOpenDetail(ad)}
-        className="aspect-[16/10] bg-slate-100 dark:bg-slate-800 relative cursor-pointer overflow-hidden flex items-center justify-center border-b border-slate-100 dark:border-slate-800/80"
+        className="aspect-[16/10] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 relative cursor-pointer overflow-hidden flex items-center justify-center border-b border-slate-100 dark:border-slate-800/80 group"
       >
-        {ad.media_url && !ad.media_url.includes('render_ad') ? (
+        {/* Se houver imagem direta (ex: CDN ou imagem real) */}
+        {ad.media_url && !ad.media_url.includes('render_ad') && !ad.media_url.includes('snapshot_url') ? (
           <img
             src={ad.media_url}
             alt={ad.headline}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-        ) : ad.snapshot_url ? (
-          <div className="w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center">
-            <iframe
-              src={ad.snapshot_url}
-              title={ad.headline}
-              className="w-[180%] h-[180%] pointer-events-none scale-50 origin-top-left border-0 opacity-90"
-              scrolling="no"
-              tabIndex={-1}
-            />
-            <div className="absolute inset-0 bg-transparent" />
-          </div>
         ) : (
-          <div className="text-center p-4 text-slate-400">
-            <Layers className="w-8 h-8 mx-auto mb-1 opacity-50" />
-            <p className="text-[11px] font-medium">Prévia na Meta</p>
+          /* Creative Stage Oficial da Meta */
+          <div className="w-full h-full relative flex flex-col items-center justify-center p-4 text-center select-none">
+            {/* Background Decorativo */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-transparent opacity-70" />
+            
+            {/* Ícone Central por Formato */}
+            <div className="relative z-10 flex flex-col items-center gap-2">
+              {ad.format === 'video' ? (
+                <>
+                  <div className="w-13 h-13 rounded-full bg-emerald-500/90 text-white shadow-lg shadow-emerald-500/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-400 transition-all duration-200">
+                    <Video className="w-6 h-6 ml-0.5" />
+                  </div>
+                  <span className="text-[11px] font-bold text-white tracking-wide">
+                    Criativo em Vídeo
+                  </span>
+                </>
+              ) : ad.format === 'carousel' ? (
+                <>
+                  <div className="w-13 h-13 rounded-full bg-indigo-500/90 text-white shadow-lg shadow-indigo-500/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-indigo-400 transition-all duration-200">
+                    <LayoutGrid className="w-6 h-6" />
+                  </div>
+                  <span className="text-[11px] font-bold text-white tracking-wide">
+                    Carrossel de Criativos
+                  </span>
+                </>
+              ) : (
+                <>
+                  <div className="w-13 h-13 rounded-full bg-slate-700/80 text-white shadow-md flex items-center justify-center group-hover:scale-110 group-hover:bg-emerald-600 transition-all duration-200">
+                    <ImageIcon className="w-6 h-6" />
+                  </div>
+                  <span className="text-[11px] font-bold text-white tracking-wide">
+                    Criativo Oficial Meta
+                  </span>
+                </>
+              )}
+
+              {/* Botão de Ação Rápida */}
+              <a
+                href={ad.original_url || ad.snapshot_url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-emerald-500/90 text-white hover:text-white text-[11px] font-medium backdrop-blur-md border border-white/15 transition-all mt-1"
+                title="Abrir reprodutor de criativo na Biblioteca Oficial da Meta"
+              >
+                <span>Ver Criativo na Meta</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+
+            {/* Bottom Advertiser Brand Bar */}
+            <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between text-left z-10">
+              <div className="flex items-center gap-2 max-w-[75%]">
+                {ad.thumbnail_url ? (
+                  <img
+                    src={ad.thumbnail_url}
+                    alt={ad.advertiser_name}
+                    className="w-5 h-5 rounded-full object-cover border border-white/20 shrink-0"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="w-5 h-5 rounded-full bg-white/10 text-[9px] font-bold text-white flex items-center justify-center shrink-0">
+                    {ad.advertiser_name.charAt(0)}
+                  </div>
+                )}
+                <span className="text-[10px] text-slate-300 truncate font-medium">
+                  {ad.advertiser_name}
+                </span>
+              </div>
+              <span className="text-[9px] text-emerald-400 font-semibold bg-emerald-950/60 border border-emerald-500/30 px-1.5 py-0.5 rounded">
+                Oficial Meta
+              </span>
+            </div>
           </div>
         )}
 
-        {/* Video Overlay Badge */}
+        {/* Format Badge */}
         {ad.format === 'video' && (
-          <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-white text-[10px] font-semibold flex items-center gap-1">
-            <Video className="w-3 h-3" />
+          <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-white text-[10px] font-semibold flex items-center gap-1 z-20">
+            <Video className="w-3 h-3 text-emerald-400" />
             <span>Vídeo</span>
           </div>
         )}
+        {ad.format === 'carousel' && (
+          <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-white text-[10px] font-semibold flex items-center gap-1 z-20">
+            <LayoutGrid className="w-3 h-3 text-indigo-400" />
+            <span>Carrossel</span>
+          </div>
+        )}
+        {ad.format === 'image' && (
+          <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-white text-[10px] font-semibold flex items-center gap-1 z-20">
+            <ImageIcon className="w-3 h-3 text-slate-300" />
+            <span>Imagem</span>
+          </div>
+        )}
 
-        {/* Longevity Badge (Highlight) */}
-        <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-md text-white text-[11px] font-bold shadow-sm flex items-center gap-1.5">
+        {/* Longevity Badge */}
+        <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-slate-900/90 backdrop-blur-md text-white text-[11px] font-bold shadow-sm flex items-center gap-1.5 z-20 border border-white/10">
           <Calendar className="w-3 h-3 text-emerald-400" />
           <span>{formatDaysActive(ad.days_active_observed)}</span>
         </div>
-
-        {/* Demo Data Tag */}
-        {ad.is_demo && (
-          <div className="absolute bottom-2 left-2.5 px-1.5 py-0.5 rounded bg-slate-900/70 text-slate-300 text-[9px] font-medium tracking-wide">
-            Demonstração
-          </div>
-        )}
       </div>
 
       {/* Card Content */}

@@ -52,6 +52,7 @@ export function AdFilters({
     onChange({
       niche: undefined,
       keyword: '',
+      country: filters.country || 'BR',
       format: 'all',
       platform: 'all',
       status: 'all',

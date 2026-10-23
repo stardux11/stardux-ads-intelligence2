@@ -144,9 +144,9 @@ export class StarduxDatabase {
       list = list.filter(a => a.days_active_observed >= (filters.minDaysActive || 0));
     }
 
-    // Filtro de país: aplica sempre que country != 'ALL'
+    // Filtro de país: estrito, aplica sempre que country != 'ALL'
     if (filters.country && filters.country !== 'ALL') {
-      list = list.filter(a => !a.country || a.country === filters.country);
+      list = list.filter(a => a.country === filters.country);
     }
 
     if (filters.onlyDemo) {
@@ -249,6 +249,7 @@ export class StarduxDatabase {
       destination_url: adData.destination_url || '',
       media_url: adData.media_url || '',
       thumbnail_url: adData.thumbnail_url || adData.media_url,
+      snapshot_url: adData.snapshot_url || '',
       isc_score: isc.totalScore,
       isc_breakdown: isc,
       is_demo: Boolean(adData.is_demo),
@@ -257,7 +258,14 @@ export class StarduxDatabase {
       updated_at: now,
     };
 
-    this.state.ads.unshift(newAd);
+    const existingIndex = this.state.ads.findIndex(
+      a => a.id === newAd.id || (newAd.external_id && a.external_id === newAd.external_id)
+    );
+    if (existingIndex >= 0) {
+      this.state.ads[existingIndex] = { ...this.state.ads[existingIndex], ...newAd, updated_at: now };
+    } else {
+      this.state.ads.unshift(newAd);
+    }
     this.updateAdvertiserMetrics();
     this.saveToDisk(this.state);
     return newAd;

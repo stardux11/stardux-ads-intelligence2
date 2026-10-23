@@ -1,21 +1,20 @@
 export const DEFAULT_META_ACCESS_TOKEN =
-  'EAANeqCLE4RkBS8cW2BIZAXgQNYmJJnnVdOUCY0bu61ZBGDdLQWCZCZCOWzZBJueRnKkiOPN7wGVpfRjFgm2HflRF4HxioWmZByHouWQ5Qz8VQ2CpfgzyeGZCsCxymWrYChXBaCHk2ctEMk2vnCq5G4JVkWoQ51QH0s7rJFFasOUMXdBwWWzyXSNUbS7ZC0TDt2RryUH9jfZATHZAj5zWSsyQ4RHahtTyeMyw6ZBQveZANLZARJqLd427R4CcW5ZCcyvO5Y1BRDRZCqFtUWfSChq9xi8Y9iXRMKfcQZDZD';
+  'EAANeqCLE4RkBSZCNzmXadu2ubF2i1MCYhOkmr2geBS98JOGjiqTS9HuYzQ0FKzcI1VstCL72ZBEmY0MgcNfXbRUfz4cMxhwZCZBdRZB51dyQ1RjpdLx2PeesZAeKXliriiUlBRyVsjBBzmOv4tSlaXySRupMxcr1cAh9VMaCMIcqVUY0vDQAZB9hZC7XSSEe';
 
 export const DEFAULT_META_APP_ID = '948501160976665';
 export const DEFAULT_META_APP_SECRET = 'ec5342e38e1ec47cc1dca48cea8daa94';
 
 /**
- * Retorna o token de acesso da Meta com fallback automático para o token verificado.
- * Token padrão: User Token de longa duração (~60 dias), verificado em 23/10/2026.
- * Evita que o app quebre em produção caso o env esteja vazio.
+ * Retorna o token de acesso da Meta com fallback automático para o token perpétuo verificado.
+ * Token padrão: Token permanente (expires_at: 0, nunca expira), verificado em 23/10/2026.
  */
 export function getMetaAccessToken(): string {
   const envToken = process.env.META_ACCESS_TOKEN?.trim();
-  // Aceita qualquer token EAANeqCLE4Rk válido do env
-  if (envToken && envToken.startsWith('EAANeqCLE4Rk') && envToken.length > 50) {
+  // Aceita qualquer token Meta válido do env (User Token, System User Token ou App Token)
+  if (envToken && (envToken.startsWith('EAA') || envToken.startsWith('948501160976665|')) && envToken.length > 30) {
     return envToken;
   }
-  // Fallback seguro para o token verificado com permissões aprovadas
+  // Fallback seguro para o token perpétuo com permissões aprovadas
   return DEFAULT_META_ACCESS_TOKEN;
 }
 

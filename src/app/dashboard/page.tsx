@@ -81,49 +81,45 @@ export default function DashboardPage() {
     <Shell>
       <div className="space-y-8">
         {/* Header & Subtitle */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-                Dashboard Geral de Inteligência
+        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800/80 bg-gradient-to-br from-white via-slate-50 to-emerald-50/20 dark:from-slate-900/90 dark:via-[#0c0e14] dark:to-emerald-950/20 shadow-sm">
+          {/* Subtle Ambient Glow */}
+          <div className="absolute -top-16 -right-16 w-64 h-64 bg-emerald-500/10 dark:bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-16 -left-16 w-64 h-64 bg-cyan-500/10 dark:bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  Stardux Ads Intelligence
+                </span>
+                <span className="text-[11px] text-slate-400">
+                  v2.0 • Sinais Observáveis
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                Inteligência de Anúncios & Criativos
               </h1>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                Stardux Ads
-              </span>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 max-w-2xl leading-relaxed">
+                Descubra o que os maiores anunciantes do mercado estão veiculando há mais tempo, com classificação por longevidade, canais e estabilidade criativa (ISC).
+              </p>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Visão consolidada de sinais criativos observáveis, concorrência e longevidade na Meta.
-            </p>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              href="/explorar"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-all hover:scale-[1.02]"
-            >
-              <Search className="w-3.5 h-3.5" />
-              <span>Explorar Anúncios</span>
-            </Link>
-            <Link
-              href="/ia-analista"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Analista IA</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* Data Limitations Disclaimer Alert */}
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50/70 to-teal-50/70 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200/60 dark:border-emerald-800/60 flex items-start gap-3">
-          <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-          <div className="text-xs">
-            <p className="font-bold text-slate-900 dark:text-white">
-              Diretriz de Transparência Stardux
-            </p>
-            <p className="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed text-[11px]">
-              Os indicadores refletem <strong>dados observados</strong> na Biblioteca de Anúncios da Meta e importações auditadas. A Meta não divulga dados de faturamento, CPA ou ROAS para anúncios comerciais comuns no Brasil. Classificamos anúncios com base em longevidade, recorrência e estabilidade criativa (ISC).
-            </p>
+            <div className="flex items-center gap-2.5 shrink-0">
+              <Link
+                href="/explorar"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02]"
+              >
+                <Search className="w-4 h-4" />
+                <span>Explorar Anúncios</span>
+              </Link>
+              <Link
+                href="/ia-analista"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs shadow-xs transition-colors"
+              >
+                <Sparkles className="w-4 h-4 text-emerald-500" />
+                <span>Analista IA</span>
+              </Link>
+            </div>
           </div>
         </div>
 

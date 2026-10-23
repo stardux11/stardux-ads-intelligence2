@@ -97,16 +97,7 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Transparency & Source Badge */}
-      <div className="p-3 m-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800/60 text-xs">
-        <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200 font-semibold mb-1">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          <span>Sinais Observáveis</span>
-        </div>
-        <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-          Dados da Meta Ad Library & CSV. Classificação por longevidade real sem inventar ROAS.
-        </p>
-      </div>
+
 
       {/* User / Workspace Footer */}
       <div className="p-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">

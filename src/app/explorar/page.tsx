@@ -63,7 +63,6 @@ function ExplorarContent() {
   const fetchAds = async () => {
     try {
       setLoading(true);
-      setApiNotice(null);
       const params = new URLSearchParams();
       if (filters.keyword) params.set('keyword', filters.keyword);
       if (filters.niche) params.set('niche', filters.niche);
@@ -83,12 +82,25 @@ function ExplorarContent() {
         setTotalCount(data.total);
       }
       if (data && data.notice) {
-        setApiNotice(data.notice);
+        // Verifica se o usuário já dispensou este aviso nesta sessão
+        const dismissed = typeof window !== 'undefined' ? sessionStorage.getItem('stardux-meta-notice-dismissed') : null;
+        if (!dismissed) {
+          setApiNotice(data.notice);
+        }
+      } else {
+        setApiNotice(null);
       }
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDismissNotice = () => {
+    setApiNotice(null);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('stardux-meta-notice-dismissed', 'true');
     }
   };
 
@@ -124,7 +136,7 @@ function ExplorarContent() {
               </div>
             </div>
             <button
-              onClick={() => setApiNotice(null)}
+              onClick={handleDismissNotice}
               className="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-200 text-xs font-bold px-2 py-1"
             >
               ✕

@@ -251,23 +251,6 @@ export default function ConfiguracoesPage() {
             </div>
           )}
 
-          {/* Dica para Token Permanente */}
-          <div className="p-3.5 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/70 dark:border-blue-900/50 text-[11px] text-blue-800 dark:text-blue-300 space-y-1.5">
-            <div className="flex items-center gap-1.5 font-bold text-blue-900 dark:text-blue-200">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-              <span>Como ter um Token Permanente que nunca expira?</span>
-            </div>
-            <p className="leading-relaxed text-slate-600 dark:text-slate-300">
-              Tokens gerados no <em>Graph API Explorer</em> duram apenas 1 a 2 horas (ou 60 dias se estendidos). Para criar um <strong>Token Permanente Perpétuo (que nunca expira)</strong>:
-            </p>
-            <ol className="list-decimal list-inside space-y-1 text-slate-700 dark:text-slate-300 pl-1 font-medium">
-              <li>Acesse o <strong>Meta Business Suite</strong> &gt; <em>Configurações do Negócio</em> &gt; <em>Usuários do Sistema (System Users)</em>.</li>
-              <li>Crie um usuário do sistema com função <strong>Admin</strong>.</li>
-              <li>Clique em <strong>Gerar Novo Token</strong>, selecione seu App e marque a expiração como <strong>Nunca (Never)</strong>.</li>
-              <li>Selecione as permissões <code>ads_read</code> e <code>read_insights</code>, gere e cole abaixo.</li>
-            </ol>
-          </div>
-
           <div className="space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>

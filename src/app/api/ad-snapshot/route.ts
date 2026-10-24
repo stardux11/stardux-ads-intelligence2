@@ -84,7 +84,7 @@ function extractMediaFromHtml(html: string): { imageUrl: string | null; videoUrl
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id');
-  const mode = searchParams.get('mode') || 'media'; // 'media' (JSON) or 'iframe' (HTML)
+  const mode = searchParams.get('mode') || 'iframe'; // 'media' (JSON) or 'iframe' (HTML)
 
   if (!id) {
     return new NextResponse('ID do anúncio é obrigatório', { status: 400 });

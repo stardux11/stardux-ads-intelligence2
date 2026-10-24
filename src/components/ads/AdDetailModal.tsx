@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   ExternalLink,
@@ -10,10 +10,11 @@ import {
   Calendar,
   Layers,
   Sparkles,
-  Info,
   ShieldCheck,
-  Download,
-  Share2,
+  Play,
+  Image as ImageIcon,
+  Video,
+  Loader2,
 } from 'lucide-react';
 import { Ad } from '@/lib/types';
 import { formatDate, formatDaysActive, getISCTierInfo } from '@/lib/utils';
@@ -25,6 +26,209 @@ interface AdDetailModalProps {
   onClose: () => void;
   onSaveToCollection?: (ad: Ad) => void;
   onOpenISC?: (ad: Ad) => void;
+}
+
+interface MediaData {
+  imageUrl: string | null;
+  videoUrl: string | null;
+  snapshotUrl?: string;
+  error?: string;
+}
+
+function AdMediaPreview({ ad }: { ad: Ad }) {
+  const [media, setMedia] = useState<MediaData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+
+  useEffect(() => {
+    if (!ad.external_id) return;
+
+    setLoading(true);
+    setMedia(null);
+    setImgError(false);
+    setVideoError(false);
+
+    fetch(`/api/ad-snapshot?id=${ad.external_id}&mode=media`)
+      .then((r) => r.json())
+      .then((data: MediaData) => {
+        setMedia(data);
+      })
+      .catch(() => {
+        setMedia({ imageUrl: null, videoUrl: null });
+      })
+      .finally(() => setLoading(false));
+  }, [ad.external_id]);
+
+  // Enquanto carrega
+  if (loading) {
+    return (
+      <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex flex-col shadow-sm">
+        <div className="bg-slate-100 dark:bg-slate-900 px-3.5 py-2.5 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2 text-xs">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+          <span className="font-semibold text-slate-800 dark:text-slate-200">Carregando Criativo…</span>
+        </div>
+        <div className="h-[360px] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  // Vídeo direto extraído
+  const videoUrl = media?.videoUrl || (
+    ad.media_url && ad.format === 'video' && !ad.media_url.includes('facebook.com')
+      ? ad.media_url
+      : null
+  );
+
+  if (videoUrl && !videoError) {
+    return (
+      <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 flex flex-col shadow-sm">
+        <div className="bg-slate-900 px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs">
+          <span className="font-semibold text-slate-200 flex items-center gap-1.5">
+            <Video className="w-3.5 h-3.5 text-emerald-400" />
+            Vídeo do Criativo
+          </span>
+          <a
+            href={ad.snapshot_url || ad.original_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-400 hover:text-emerald-300 text-[11px] font-bold flex items-center gap-1"
+          >
+            <span>Ver na Meta</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+        <div className="relative w-full bg-black">
+          <video
+            src={videoUrl}
+            controls
+            autoPlay={false}
+            playsInline
+            className="w-full max-h-[460px] object-contain"
+            poster={ad.thumbnail_url || undefined}
+            onError={() => setVideoError(true)}
+          >
+            Seu navegador não suporta reprodução de vídeo.
+          </video>
+        </div>
+      </div>
+    );
+  }
+
+  // Imagem direta extraída
+  const imageUrl = media?.imageUrl || (
+    ad.media_url && !ad.media_url.includes('facebook.com') && !ad.media_url.includes('render_ad')
+      ? ad.media_url
+      : null
+  );
+
+  if (imageUrl && !imgError) {
+    return (
+      <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 flex flex-col shadow-sm">
+        <div className="bg-slate-900 px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs">
+          <span className="font-semibold text-slate-200 flex items-center gap-1.5">
+            <ImageIcon className="w-3.5 h-3.5 text-emerald-400" />
+            Imagem do Criativo
+          </span>
+          <a
+            href={ad.snapshot_url || ad.original_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-400 hover:text-emerald-300 text-[11px] font-bold flex items-center gap-1"
+          >
+            <span>Ver na Meta</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+        <div className="relative bg-slate-950 flex items-center justify-center">
+          <img
+            src={imageUrl}
+            alt={ad.headline || ad.advertiser_name}
+            className="w-full max-h-[460px] object-contain"
+            onError={() => setImgError(true)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback: thumbnail da página + botão de acesso à Meta
+  const thumbUrl = ad.thumbnail_url;
+
+  return (
+    <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 flex flex-col shadow-sm">
+      <div className="bg-slate-900 px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs">
+        <span className="font-semibold text-slate-200 flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+          Criativo Oficial Meta
+        </span>
+        <a
+          href={ad.snapshot_url || ad.original_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-emerald-400 hover:text-emerald-300 text-[11px] font-bold flex items-center gap-1"
+        >
+          <span>Abrir na Meta</span>
+          <ExternalLink className="w-3 h-3" />
+        </a>
+      </div>
+
+      {/* Preview visual com avatar + botão de ação */}
+      <div className="relative h-[300px] flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950">
+        {thumbUrl && (
+          <img
+            src={thumbUrl}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover opacity-10 blur-lg scale-110"
+          />
+        )}
+        <div className="relative z-10 flex flex-col items-center gap-4 text-center px-6">
+          {thumbUrl ? (
+            <img
+              src={thumbUrl}
+              alt={ad.advertiser_name}
+              className="w-20 h-20 rounded-full object-cover border-2 border-white/20 shadow-2xl"
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-emerald-600/40 flex items-center justify-center text-3xl font-bold text-white shadow-2xl">
+              {ad.advertiser_name.slice(0, 2).toUpperCase()}
+            </div>
+          )}
+
+          <div>
+            <p className="text-white font-bold text-sm">{ad.advertiser_name}</p>
+            <p className="text-slate-400 text-xs mt-0.5">
+              {ad.format === 'video' ? 'Anúncio em Vídeo' : ad.format === 'carousel' ? 'Carrossel' : 'Anúncio de Imagem'}
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center gap-2 w-full max-w-[220px]">
+            <a
+              href={ad.snapshot_url || ad.original_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors shadow-lg shadow-emerald-900/30"
+            >
+              {ad.format === 'video' ? (
+                <Play className="w-4 h-4 fill-current" />
+              ) : (
+                <ExternalLink className="w-3.5 h-3.5" />
+              )}
+              <span>
+                {ad.format === 'video' ? 'Assistir Vídeo na Meta' : 'Ver Imagem na Meta'}
+              </span>
+            </a>
+            <p className="text-slate-500 text-[10px] text-center leading-tight">
+              O criativo completo está disponível na Biblioteca de Anúncios oficial da Meta
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function AdDetailModal({
@@ -88,7 +292,7 @@ export function AdDetailModal({
               <span>Salvar</span>
             </button>
             <a
-              href={ad.original_url}
+              href={ad.snapshot_url || ad.original_url}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-100 hover:opacity-90 text-white dark:text-slate-900 text-xs font-semibold transition-opacity"
@@ -153,7 +357,7 @@ export function AdDetailModal({
                 : 'border-transparent text-slate-400 hover:text-slate-600'
             }`}
           >
-            Visualização & Cópia
+            Visualização &amp; Cópia
           </button>
           <button
             onClick={() => setActiveTab('strategy')}
@@ -175,40 +379,7 @@ export function AdDetailModal({
               {/* Media Preview Column */}
               <div className="md:col-span-6 space-y-3">
                 {ad.external_id ? (
-                  <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex flex-col shadow-sm">
-                    <div className="bg-slate-100 dark:bg-slate-900 px-3.5 py-2.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
-                      <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-                        <span>Criativo Oficial Ao Vivo (Meta)</span>
-                      </span>
-                      <a
-                        href={ad.snapshot_url || ad.original_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 text-[11px] font-bold flex items-center gap-1"
-                      >
-                        <span>Abrir na Meta</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-                    <div className="relative w-full h-[520px] bg-slate-50 dark:bg-slate-900">
-                      <iframe
-                        src={`/api/ad-snapshot?id=${ad.external_id}`}
-                        className="w-full h-full border-0"
-                        title={ad.headline}
-                        sandbox="allow-scripts allow-same-origin allow-popups"
-                      />
-                    </div>
-                  </div>
-                ) : ad.media_url && !ad.media_url.includes('render_ad') && !ad.media_url.includes('facebook.com') ? (
-                  <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 aspect-square">
-                    <img
-                      src={ad.media_url}
-                      alt={ad.headline}
-                      className="w-full h-full object-cover"
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                    />
-                  </div>
+                  <AdMediaPreview ad={ad} />
                 ) : ad.thumbnail_url ? (
                   <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 aspect-square relative flex items-center justify-center">
                     <img
@@ -363,7 +534,7 @@ export function AdDetailModal({
                 <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                   <h5 className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 mb-1 text-xs">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    5. Oferta & Condições
+                    5. Oferta &amp; Condições
                   </h5>
                   <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-[11px]">
                     {analysis.offer_analysis}
@@ -407,7 +578,7 @@ export function AdDetailModal({
                 <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                   <h5 className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 mb-1 text-xs">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    9. Estilo Criativo & Formato
+                    9. Estilo Criativo &amp; Formato
                   </h5>
                   <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-[11px]">
                     {analysis.creative_style}

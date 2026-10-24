@@ -10,11 +10,11 @@ export const DEFAULT_META_APP_SECRET = 'ec5342e38e1ec47cc1dca48cea8daa94';
  */
 export function getMetaAccessToken(): string {
   const envToken = process.env.META_ACCESS_TOKEN?.trim();
-  // Aceita qualquer token Meta válido do env (User Token, System User Token ou App Token)
-  if (envToken && (envToken.startsWith('EAA') || envToken.startsWith('948501160976665|')) && envToken.length > 30) {
+  // Aceita do env se for o token verificado que possui permissão na Ad Library API
+  if (envToken && envToken.startsWith('EAANeqCLE4RkBSZCN') && envToken.length > 50) {
     return envToken;
   }
-  // Fallback seguro para o token perpétuo com permissões aprovadas
+  // Fallback seguro: usa o token perpétuo verificado oficial (expires_at: 0)
   return DEFAULT_META_ACCESS_TOKEN;
 }
 

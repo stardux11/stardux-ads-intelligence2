@@ -1,7 +1,7 @@
 import { IDataProvider, ProviderStatus } from './types';
 import { Ad, AdSearchFilters } from '../types';
 import { calculateISC } from '../isc';
-import { getMetaAccessToken } from '../meta-config';
+import { getMetaAccessToken, DEFAULT_META_ACCESS_TOKEN } from '../meta-config';
 
 export class MetaAdLibraryProvider implements IDataProvider {
   id = 'meta_ad_library';
@@ -80,7 +80,15 @@ export class MetaAdLibraryProvider implements IDataProvider {
 
       url.searchParams.set('limit', String(Math.min(filters.limit || 30, 50)));
 
-      const res = await fetch(url.toString());
+      let res = await fetch(url.toString());
+      if (!res.ok && url.searchParams.get('access_token') !== DEFAULT_META_ACCESS_TOKEN) {
+        url.searchParams.set('access_token', DEFAULT_META_ACCESS_TOKEN);
+        const retryRes = await fetch(url.toString());
+        if (retryRes.ok) {
+          res = retryRes;
+        }
+      }
+
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         const err = errorData.error || {};

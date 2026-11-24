@@ -33,7 +33,7 @@ import { AdDetailModal } from '@/components/ads/AdDetailModal';
 import { ISCBreakdownModal } from '@/components/ads/ISCBreadownModal';
 import { SaveToCollectionModal } from '@/components/collections/SaveToCollectionModal';
 
-const COLORS = ['#10b981', '#06b6d4', '#6366f1', '#f59e0b', '#ec4899'];
+const COLORS = ['#04C4D9', '#7C3AED', '#10B981', '#D91A83', '#F5C000'];
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<any>(null);
@@ -79,9 +79,9 @@ export default function DashboardPage() {
 
   return (
     <Shell>
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header & Subtitle */}
-        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-white/[0.06] bg-gradient-to-br from-white via-slate-50/80 to-cyan-50/30 dark:from-[#0d0e14] dark:via-[#0a0b0f] dark:to-[#0d0e14] shadow-sm">
+        <div className="ads-hero p-5 sm:p-7">
           {/* Ambient Glow — Stardux Brand */}
           <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full blur-3xl pointer-events-none" style={{background: 'rgba(4,196,217,0.10)'}} />
           <div className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full blur-3xl pointer-events-none" style={{background: 'rgba(124,58,237,0.08)'}} />
@@ -89,17 +89,17 @@ export default function DashboardPage() {
           <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border" style={{background: 'rgba(4,196,217,0.10)', color: '#04C4D9', borderColor: 'rgba(4,196,217,0.25)'}}>
+                <span className="ads-eyebrow">
                   Stardux Ads Intelligence
                 </span>
                 <span className="text-[11px] text-slate-400">
                   v2.0 • Sinais Observáveis
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              <h1 className="ads-page-title">
                 Inteligência de Anúncios & Criativos
               </h1>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 max-w-2xl leading-relaxed">
+              <p className="ads-subtitle">
                 Descubra o que os maiores anunciantes do mercado estão veiculando há mais tempo, com classificação por longevidade, canais e estabilidade criativa (ISC).
               </p>
             </div>
@@ -107,17 +107,16 @@ export default function DashboardPage() {
             <div className="flex items-center gap-2.5 shrink-0">
               <Link
                 href="/explorar"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-semibold text-xs shadow-md transition-all hover:scale-[1.02] hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg, #04C4D9, #7C3AED)' }}
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-[#117783] px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#0d5f68] dark:bg-[#04C4D9] dark:text-[#0A0B0F] dark:hover:bg-[#23d4e5]"
               >
                 <Search className="w-4 h-4" />
                 <span>Explorar Anúncios</span>
               </Link>
               <Link
                 href="/ia-analista"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs shadow-xs transition-colors"
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200 dark:hover:bg-white/[0.08]"
               >
-                <Sparkles className="w-4 h-4 text-emerald-500" />
+                <Sparkles className="w-4 h-4 text-cyan-700 dark:text-cyan-400" />
                 <span>Analista IA</span>
               </Link>
             </div>
@@ -127,7 +126,7 @@ export default function DashboardPage() {
         {/* Top 4 KPI Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Total de Anúncios */}
-          <div className="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs">
+          <div className="ads-stat p-5">
             <div className="flex items-center justify-between text-slate-400 mb-3">
               <span className="text-xs font-medium">Anúncios Monitorados</span>
               <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
@@ -144,7 +143,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Total de Concorrentes */}
-          <div className="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs">
+          <div className="ads-stat p-5">
             <div className="flex items-center justify-between text-slate-400 mb-3">
               <span className="text-xs font-medium">Concorrentes Cadastrados</span>
               <div className="w-8 h-8 rounded-lg bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
@@ -155,12 +154,12 @@ export default function DashboardPage() {
               {loading ? '...' : stats?.totalAdvertisers || 0}
             </div>
             <div className="mt-2 text-[11px] text-slate-400">
-              Em {stats?.totalProjects || 2} projetos de pesquisa ativos
+              Em {stats?.totalProjects ?? 0} projetos de pesquisa ativos
             </div>
           </div>
 
           {/* Longevidade Média */}
-          <div className="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs">
+          <div className="ads-stat p-5">
             <div className="flex items-center justify-between text-slate-400 mb-3">
               <span className="text-xs font-medium">Longevidade Média Observada</span>
               <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
@@ -176,7 +175,7 @@ export default function DashboardPage() {
           </div>
 
           {/* ISC Médio */}
-          <div className="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs">
+          <div className="ads-stat p-5">
             <div className="flex items-center justify-between text-slate-400 mb-3">
               <span className="text-xs font-medium">Média ISC do Workspace</span>
               <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
@@ -195,11 +194,11 @@ export default function DashboardPage() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Formatos de Criativos (Donut Chart) */}
-          <div className="lg:col-span-5 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 flex flex-col justify-between">
+          <div className="ads-surface flex flex-col justify-between p-5 lg:col-span-5">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <h3 className="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-2">
-                  <PieIcon className="w-4 h-4 text-emerald-500" />
+                  <PieIcon className="w-4 h-4 text-cyan-700 dark:text-cyan-400" />
                   <span>Formatos Mais Frequentes</span>
                 </h3>
                 <span className="text-[11px] text-slate-400">Sinais observados</span>
@@ -259,11 +258,11 @@ export default function DashboardPage() {
           </div>
 
           {/* Distribuição por Nicho (Bar Chart) */}
-          <div className="lg:col-span-7 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 flex flex-col justify-between">
+          <div className="ads-surface flex flex-col justify-between p-5 lg:col-span-7">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <h3 className="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 text-emerald-500" />
+                  <BarChart3 className="w-4 h-4 text-cyan-700 dark:text-cyan-400" />
                   <span>Anúncios por Nicho Monitorado</span>
                 </h3>
                 <span className="text-[11px] text-slate-400">Concentração</span>
@@ -294,7 +293,7 @@ export default function DashboardPage() {
                         border: 'none',
                       }}
                     />
-                    <Bar dataKey="anuncios" fill="#10b981" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="anuncios" fill="#04C4D9" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
@@ -307,11 +306,11 @@ export default function DashboardPage() {
         </div>
 
         {/* Top Longevity Ads Section */}
-        <div className="p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90">
+        <div className="ads-surface p-5 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-emerald-500" />
+                <TrendingUp className="w-4 h-4 text-cyan-700 dark:text-cyan-400" />
                 <span>Anúncios com Maior Tempo de Veiculação Observada</span>
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">

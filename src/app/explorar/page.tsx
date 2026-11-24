@@ -106,10 +106,23 @@ function ExplorarContent() {
 
   return (
     <Shell>
-      <div className="space-y-6">
+      <div className="space-y-5 sm:space-y-6">
+        <header className="ads-hero flex flex-wrap items-center justify-between gap-5 p-5 sm:p-7">
+          <div className="max-w-2xl">
+            <span className="ads-eyebrow"><Sparkles className="h-3.5 w-3.5" aria-hidden="true" /> Inteligência de mercado · Biblioteca Meta</span>
+            <h1 className="ads-page-title">Explorar anúncios</h1>
+            <p className="ads-subtitle">
+              Descubra referências criativas, compare formatos e estude a longevidade observada dos anúncios.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white/75 px-3 py-2 text-xs font-medium text-slate-600 dark:border-white/10 dark:bg-white/[0.035] dark:text-slate-300">
+            <Search className="h-4 w-4 text-cyan-700 dark:text-cyan-400" aria-hidden="true" />
+            Análise competitiva
+          </div>
+        </header>
         {/* Aviso de erro da API */}
         {apiNotice && (
-          <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-300 text-xs flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-3 rounded-xl border border-rose-500/25 bg-rose-500/5 p-4 text-xs text-rose-800 dark:text-rose-300">
             <div className="flex items-start gap-2.5">
               <span className="text-base leading-none">⚠️</span>
               <div>
@@ -140,9 +153,9 @@ function ExplorarContent() {
         {/* Estados da Tela */}
         {!hasSearchIntent ? (
           /* Estado inicial: aguardando pesquisa */
-          <div className="py-20 flex flex-col items-center justify-center text-center gap-5">
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 flex items-center justify-center border border-emerald-500/20">
-              <Search className="w-9 h-9 text-emerald-500" />
+          <div className="ads-surface flex flex-col items-center justify-center gap-5 px-5 py-14 text-center sm:py-20">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-cyan-500/15 to-violet-500/10 flex items-center justify-center border border-cyan-500/20">
+              <Search className="w-9 h-9 text-cyan-700 dark:text-cyan-400" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
@@ -157,7 +170,7 @@ function ExplorarContent() {
                 <button
                   key={sugestao}
                   onClick={() => setFilters({ ...filters, keyword: sugestao, page: 1 })}
-                  className="px-4 py-2 rounded-xl border border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 font-semibold text-xs hover:scale-105 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/30 transition-all"
+                  className="rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-700 transition-colors hover:border-cyan-500/50 hover:bg-cyan-500/10 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200 dark:hover:text-cyan-300"
                 >
                   {sugestao} →
                 </button>
@@ -166,8 +179,8 @@ function ExplorarContent() {
           </div>
         ) : loading ? (
           /* Carregando */
-          <div className="py-24 text-center flex flex-col items-center justify-center">
-            <Loader2 className="w-8 h-8 text-emerald-600 animate-spin mb-3" />
+          <div className="ads-surface flex flex-col items-center justify-center py-20 text-center">
+            <Loader2 className="w-8 h-8 text-cyan-700 dark:text-cyan-400 animate-spin mb-3" />
             <p className="text-xs text-slate-500 font-medium">
               Buscando anúncios ativos na Meta Ad Library...
             </p>
@@ -177,7 +190,7 @@ function ExplorarContent() {
           </div>
         ) : ads.length === 0 ? (
           /* Sem resultados */
-          <div className="p-14 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
+          <div className="ads-surface border-dashed px-6 py-16 text-center">
             <SearchX className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
             <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm">
               Nenhum anúncio encontrado
@@ -194,7 +207,7 @@ function ExplorarContent() {
           </div>
         ) : viewMode === 'grid' ? (
           /* Grid de Cards */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-3">
             {ads.map((ad) => (
               <AdCard
                 key={ad.id}
@@ -207,9 +220,9 @@ function ExplorarContent() {
           </div>
         ) : (
           /* Tabela */
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-xs">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 font-semibold border-b border-slate-100 dark:border-slate-800">
+          <div className="ads-surface overflow-x-auto">
+            <table className="w-full min-w-[860px] text-left text-xs">
+              <thead className="border-b border-slate-200 bg-slate-50/80 font-semibold text-slate-500 dark:border-white/10 dark:bg-white/[0.045]">
                 <tr>
                   <th className="p-3.5">Criativo</th>
                   <th className="p-3.5">Anunciante</th>
@@ -227,7 +240,7 @@ function ExplorarContent() {
                     <tr
                       key={ad.id}
                       onClick={() => setSelectedAd(ad)}
-                      className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
+                      className="cursor-pointer transition-colors hover:bg-cyan-500/[0.045]"
                     >
                       <td className="p-3.5">
                         <div className="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden shrink-0 border border-slate-200 dark:border-slate-800">

@@ -42,7 +42,7 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
   };
 
   return (
-    <div className="group rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 shadow-xs hover:shadow-xl hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 flex flex-col overflow-hidden relative">
+    <div className="ads-surface group relative flex flex-col overflow-hidden transition-[border-color,box-shadow] duration-200 hover:border-cyan-500/35 hover:shadow-[0_10px_28px_rgba(4,196,217,0.055)]">
       {/* Top Media / Creative Section */}
       <div
         onClick={() => onOpenDetail(ad)}
@@ -215,7 +215,7 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
         <div>
           {/* Advertiser & Format */}
           <div className="flex items-center justify-between gap-2 mb-2">
-            <span className="font-bold text-slate-900 dark:text-white truncate max-w-[180px] hover:text-emerald-600 transition-colors">
+            <span className="max-w-[180px] truncate font-bold text-slate-900 transition-colors hover:text-cyan-800 dark:text-white dark:hover:text-cyan-300">
               {ad.advertiser_name}
             </span>
             <div className="flex items-center gap-1 text-[10px] font-semibold text-slate-500 uppercase bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
@@ -227,7 +227,7 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
           {/* Headline */}
           <h4
             onClick={() => onOpenDetail(ad)}
-            className="font-bold text-slate-800 dark:text-slate-100 line-clamp-1 cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-400 text-xs mb-1.5"
+            className="mb-1.5 line-clamp-1 cursor-pointer text-xs font-bold text-slate-800 hover:text-cyan-800 dark:text-slate-100 dark:hover:text-cyan-300"
             title={ad.headline}
           >
             {ad.headline}
@@ -281,7 +281,7 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
                   e.stopPropagation();
                   onSaveToCollection(ad);
                 }}
-                className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                className="rounded-lg border border-slate-200 p-2 text-slate-500 transition-colors hover:bg-cyan-500/10 hover:text-cyan-800 dark:border-white/10 dark:hover:text-cyan-300"
                 title="Salvar na Biblioteca"
               >
                 <Bookmark className="w-3.5 h-3.5" />
@@ -302,7 +302,7 @@ export function AdCard({ ad, onOpenDetail, onSaveToCollection, onOpenISC }: AdCa
             <button
               type="button"
               onClick={() => onOpenDetail(ad)}
-              className="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 font-semibold text-xs transition-colors"
+              className="rounded-lg bg-cyan-600/10 px-3 py-1.5 text-xs font-semibold text-cyan-800 transition-colors hover:bg-cyan-600/20 dark:text-cyan-300"
             >
               Ver Detalhes
             </button>

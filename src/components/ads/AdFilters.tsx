@@ -62,164 +62,124 @@ export function AdFilters({
     });
   };
 
+  const controlClass = 'w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-semibold text-slate-700 outline-none transition-colors focus-visible:border-cyan-600 focus-visible:ring-2 focus-visible:ring-cyan-600/15 dark:border-white/10 dark:bg-[#12151d] dark:text-slate-200';
+
   return (
-    <div className="space-y-4">
-      {/* Hero Search Box */}
-      <div className="relative">
-        <div className="relative flex items-center">
-          <Search className="w-5 h-5 text-slate-400 absolute left-4 pointer-events-none" />
-          <input
-            type="text"
-            value={filters.keyword || ''}
-            onChange={handleKeywordChange}
-            placeholder="Descubra o que os anunciantes do seu mercado estão fazendo..."
-            className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/90 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 shadow-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
-          />
+    <section className="ads-surface p-4 sm:p-5" aria-label="Pesquisar e filtrar anúncios">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <span className="ads-eyebrow"><Sparkles className="h-3.5 w-3.5" aria-hidden="true" /> BIBLIOTECA DE ANÚNCIOS</span>
+          <h2 className="mt-1.5 text-lg font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+            Encontre referências criativas
+          </h2>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            Busque empresas, segmentos e formatos. Os filtros mantêm os mesmos dados da Meta.
+          </p>
+        </div>
+        {showResultsCount && (
+          <span role="status" className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/5 px-3 py-1.5 text-xs font-semibold text-cyan-800 dark:text-cyan-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-cyan-500" aria-hidden="true" />
+            {totalResults.toLocaleString('pt-BR')} resultados
+          </span>
+        )}
+      </div>
+
+      <div className="mt-5">
+        <label htmlFor="ads-search-keyword" className="mb-2 block text-xs font-semibold text-slate-700 dark:text-slate-300">
+          Empresa, produto ou segmento
+        </label>
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-[19px] w-[19px] -translate-y-1/2 text-cyan-700 dark:text-cyan-400" aria-hidden="true" />
+          <input id="ads-search-keyword" type="search"
+            value={filters.keyword || ''} onChange={handleKeywordChange}
+            placeholder="Ex.: imobiliárias, clínica odontológica, cursos online"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50/70 py-3.5 pl-12 pr-20 text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none transition-colors focus:border-cyan-600 focus:bg-white focus:ring-2 focus:ring-cyan-500/15 dark:border-white/10 dark:bg-[#12151d] dark:text-slate-100 dark:focus:bg-[#161b23]" />
           {filters.keyword && (
-            <button
-              onClick={() => onChange({ ...filters, keyword: '', page: 1 })}
-              className="absolute right-4 text-xs font-semibold text-slate-400 hover:text-slate-600"
-            >
-              Limpar
-            </button>
+            <button type="button" onClick={() => onChange({ ...filters, keyword: '', page: 1 })}
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-200/70 hover:text-slate-900 dark:hover:bg-white/10 dark:hover:text-white"
+              aria-label="Limpar palavra-chave">Limpar</button>
           )}
         </div>
       </div>
 
-      {/* Filter Row */}
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Niche Dropdown */}
-          <select
-            value={filters.niche || ''}
-            onChange={handleNicheChange}
-            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium outline-none focus:border-emerald-500"
-          >
-            <option value="">Todos os Nichos</option>
-            {niches.map((n) => (
-              <option key={n.id} value={n.slug}>
-                {n.name}
-              </option>
-            ))}
+      <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
+        <label className="min-w-0 space-y-1.5">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Nicho</span>
+          <select aria-label="Filtrar por nicho" className={controlClass} value={filters.niche || ''} onChange={handleNicheChange}>
+            <option value="">Todos os nichos</option>
+            {niches.map(n => <option key={n.id} value={n.slug}>{n.name}</option>)}
           </select>
-
-          {/* Format Dropdown */}
-          <select
-            value={filters.format || 'all'}
-            onChange={handleFormatChange}
-            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium outline-none focus:border-emerald-500"
-          >
-            <option value="all">Todos os Formatos</option>
+        </label>
+        <label className="min-w-0 space-y-1.5">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Formato</span>
+          <select aria-label="Filtrar por formato" className={controlClass} value={filters.format || 'all'} onChange={handleFormatChange}>
+            <option value="all">Todos os formatos</option>
             <option value="video">Vídeo</option>
-            <option value="image">Imagem Estática</option>
+            <option value="image">Imagem</option>
             <option value="carousel">Carrossel</option>
           </select>
-
-          {/* Platform Dropdown */}
-          <select
-            value={filters.platform || 'all'}
-            onChange={handlePlatformChange}
-            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium outline-none focus:border-emerald-500"
-          >
-            <option value="all">Todas as Plataformas</option>
+        </label>
+        <label className="min-w-0 space-y-1.5">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Rede</span>
+          <select aria-label="Filtrar por plataforma" className={controlClass} value={filters.platform || 'all'} onChange={handlePlatformChange}>
+            <option value="all">Facebook e Instagram</option>
             <option value="facebook">Facebook</option>
             <option value="instagram">Instagram</option>
           </select>
-
-          {/* Country Dropdown */}
-          <select
-            value={filters.country || 'BR'}
-            onChange={(e) => onChange({ ...filters, country: e.target.value, page: 1 })}
-            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium outline-none focus:border-emerald-500"
-          >
-            <option value="BR">🇧🇷 Brasil (BR)</option>
-            <option value="US">🇺🇸 Estados Unidos (US)</option>
-            <option value="PT">🇵🇹 Portugal (PT)</option>
-            <option value="ES">🇪🇸 Espanha (ES)</option>
-            <option value="GB">🇬🇧 Reino Unido (GB)</option>
-            <option value="ALL">🌐 Todos os Países</option>
+        </label>
+        <label className="min-w-0 space-y-1.5">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">País</span>
+          <select aria-label="Filtrar por país" className={controlClass} value={filters.country || 'BR'}
+            onChange={e => onChange({ ...filters, country: e.target.value, page: 1 })}>
+            <option value="BR">Brasil</option><option value="US">Estados Unidos</option>
+            <option value="PT">Portugal</option><option value="ES">Espanha</option>
+            <option value="GB">Reino Unido</option><option value="ALL">Todos os países</option>
           </select>
-
-          {/* Longevity Filter */}
-          <select
-            value={filters.minDaysActive || ''}
-            onChange={handleLongevityChange}
-            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-medium outline-none focus:border-emerald-500"
-          >
-            <option value="">Qualquer Longevidade</option>
-            <option value="15">&gt; 15 dias ativos</option>
-            <option value="30">&gt; 30 dias ativos (Consistente)</option>
-            <option value="60">&gt; 60 dias ativos (Alta Longevidade)</option>
-            <option value="90">&gt; 90 dias ativos (Referência)</option>
+        </label>
+        <label className="min-w-0 space-y-1.5">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Longevidade observada</span>
+          <select aria-label="Filtrar por tempo ativo" className={controlClass}
+            value={filters.minDaysActive || ''} onChange={handleLongevityChange}>
+            <option value="">Qualquer período</option>
+            <option value="15">Mais de 15 dias</option><option value="30">Mais de 30 dias</option>
+            <option value="60">Mais de 60 dias</option><option value="90">Mais de 90 dias</option>
           </select>
+        </label>
+      </div>
 
-          {/* Reset Filters */}
-          {(filters.keyword || filters.niche || (filters.format && filters.format !== 'all') || filters.minDaysActive) && (
-            <button
-              onClick={handleReset}
-              className="px-3 py-2 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 flex items-center gap-1.5 font-medium transition-colors"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Limpar Filtros</span>
-            </button>
-          )}
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4 dark:border-white/[0.08]">
+        <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+          <Filter className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span className="hidden sm:inline">Refine sua pesquisa para encontrar os anúncios mais relevantes.</span>
+          <button type="button" onClick={handleReset}
+            className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 font-semibold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/[0.07]">
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" /> Limpar filtros
+          </button>
         </div>
-
-        {/* Sorting and View Controls */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400 font-medium">Ordenar por:</span>
-            <select
-              value={filters.sortBy || 'longevity'}
-              onChange={handleSortChange}
-              className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-semibold outline-none focus:border-emerald-500"
-            >
-              <option value="longevity">Maior Longevidade Observada</option>
-              <option value="isc">Maior ISC (Sinais Criativos)</option>
-              <option value="recent">Mais Recentes</option>
-              <option value="oldest">Mais Antigos</option>
-              <option value="advertiser">Anunciante (A-Z)</option>
-            </select>
-          </div>
-
-          <div className="flex items-center border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900 p-0.5">
-            <button
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+          <label htmlFor="ads-sort" className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Ordenação</label>
+          <select id="ads-sort" aria-label="Ordenar anúncios" value={filters.sortBy || 'longevity'}
+            onChange={handleSortChange} className={controlClass + ' max-w-[230px] flex-1'}>
+            <option value="longevity">Maior longevidade</option>
+            <option value="isc">Maior ISC</option>
+            <option value="recent">Mais recentes</option><option value="oldest">Mais antigos</option>
+            <option value="advertiser">Anunciante A–Z</option>
+          </select>
+          <div role="group" aria-label="Visualização de resultados" className="inline-flex shrink-0 items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 dark:border-white/10 dark:bg-white/[0.04]">
+            <button type="button" aria-pressed={viewMode === 'grid'} aria-label="Mostrar grade"
               onClick={() => onViewModeChange('grid')}
-              className={`p-1.5 rounded-lg ${
-                viewMode === 'grid'
-                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                  : 'text-slate-400 hover:text-slate-600'
-              }`}
-              title="Exibir em Grade"
-            >
-              <LayoutGrid className="w-4 h-4" />
+              className={`rounded-lg p-2 transition-colors ${viewMode === 'grid' ? 'bg-white text-cyan-800 shadow-sm dark:bg-[#202632] dark:text-cyan-300' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'}`}>
+              <LayoutGrid className="h-4 w-4" aria-hidden="true" />
             </button>
-            <button
+            <button type="button" aria-pressed={viewMode === 'table'} aria-label="Mostrar tabela"
               onClick={() => onViewModeChange('table')}
-              className={`p-1.5 rounded-lg ${
-                viewMode === 'table'
-                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                  : 'text-slate-400 hover:text-slate-600'
-              }`}
-              title="Exibir em Lista"
-            >
-              <List className="w-4 h-4" />
+              className={`rounded-lg p-2 transition-colors ${viewMode === 'table' ? 'bg-white text-cyan-800 shadow-sm dark:bg-[#202632] dark:text-cyan-300' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'}`}>
+              <List className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
         </div>
       </div>
-
-      {/* Results Count Banner - só aparece após busca */}
-      {showResultsCount && (
-        <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
-          <span>
-            Encontrados <strong>{totalResults}</strong> anúncios reais na Meta Ad Library
-          </span>
-          <span className="text-[11px] text-slate-400">
-            Fonte: Meta Ad Library API Oficial
-          </span>
-        </div>
-      )}
-    </div>
+      {showResultsCount && <p className="mt-3 text-[11px] text-slate-400 dark:text-slate-500">Fonte: Biblioteca de Anúncios da Meta · Dados observáveis, não estimativas de conversão.</p>}
+    </section>
   );
 }

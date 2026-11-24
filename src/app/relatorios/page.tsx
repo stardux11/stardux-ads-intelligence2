@@ -130,14 +130,15 @@ export default function RelatoriosPage() {
 
   return (
     <Shell>
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header (Hidden on Print) */}
         <div className="no-print flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <span className="ads-eyebrow">INTELIGÊNCIA · RELATÓRIOS</span>
+            <h1 className="ads-page-title">
               Relatórios Estratégicos de Inteligência
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="ads-subtitle">
               Documentos profissionais executivos prontos para apresentação a clientes da Stardux ou exportação em PDF.
             </p>
           </div>
@@ -153,7 +154,7 @@ export default function RelatoriosPage() {
 
             <button
               onClick={handlePrint}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-all hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#117783] hover:bg-[#0d5f68] text-white dark:bg-[#04C4D9] dark:text-[#0A0B0F] dark:hover:bg-[#23d4e5] font-semibold text-xs shadow-xs transition-all hover:scale-[1.02]"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Imprimir / Salvar em PDF</span>

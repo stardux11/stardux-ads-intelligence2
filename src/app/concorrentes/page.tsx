@@ -116,21 +116,22 @@ export default function ConcorrentesPage() {
 
   return (
     <Shell>
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="ads-hero flex flex-col justify-between gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <span className="ads-eyebrow">CONCORRÊNCIA · BENCHMARKING</span>
+            <h1 className="ads-page-title">
               Análise de Concorrentes & Benchmarking
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="ads-subtitle">
               Selecione dois ou mais concorrentes para comparar presença, longevidade de criativos e abordagens.
             </p>
           </div>
 
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-all hover:scale-[1.02]"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#117783] hover:bg-[#0d5f68] text-white dark:bg-[#04C4D9] dark:text-[#0A0B0F] dark:hover:bg-[#23d4e5] font-semibold text-xs shadow-xs transition-all hover:scale-[1.02]"
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>Cadastrar Concorrente</span>
@@ -138,7 +139,7 @@ export default function ConcorrentesPage() {
         </div>
 
         {/* Competitor Selector Pills */}
-        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
+        <div className="ads-surface p-5">
           <div className="flex items-center justify-between mb-3 text-xs">
             <span className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Users2 className="w-4 h-4 text-emerald-500" />
@@ -205,7 +206,7 @@ export default function ConcorrentesPage() {
                 return (
                   <div
                     key={comp.id}
-                    className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between"
+                    className="ads-surface p-5 flex flex-col justify-between"
                   >
                     <div>
                       {/* Competitor Header */}

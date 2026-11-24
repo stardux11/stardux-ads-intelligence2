@@ -89,19 +89,20 @@ export default function IAAnalistaPage() {
 
   return (
     <Shell>
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="ads-hero flex flex-col justify-between gap-4 p-5 md:flex-row md:items-center sm:p-6">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+              <span className="ads-eyebrow">INTELIGÊNCIA · IA CRIATIVA</span>
+            <h1 className="ads-page-title">
                 Analista Criativo com Inteligência Artificial
               </h1>
               <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                 Stardux Engine
               </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="ads-subtitle">
               Faça perguntas estratégicas em linguagem natural para sintetizar padrões dos anúncios observados.
             </p>
           </div>

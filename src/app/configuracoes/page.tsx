@@ -112,13 +112,14 @@ export default function ConfiguracoesPage() {
 
   return (
     <Shell>
-      <div className="space-y-8 max-w-4xl">
+      <div className="max-w-5xl space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <div className="ads-hero p-5 sm:p-6">
+          <span className="ads-eyebrow">INTELIGÊNCIA · CONFIGURAÇÕES</span>
+            <h1 className="ads-page-title">
             Configurações da Plataforma
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="ads-subtitle">
             Gerenciamento de credenciais, inteligência artificial, organização e armazenamento de dados.
           </p>
         </div>
@@ -131,7 +132,7 @@ export default function ConfiguracoesPage() {
         )}
 
         {/* 1. Organização & Perfil */}
-        <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-4 text-xs">
+        <div className="ads-surface p-6 space-y-4 text-xs">
           <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
             <Building2 className="w-4 h-4 text-emerald-500" />
             <h3 className="font-bold text-sm text-slate-900 dark:text-white">
@@ -166,7 +167,7 @@ export default function ConfiguracoesPage() {
         </div>
 
         {/* 2. Armazenamento e Banco de Dados */}
-        <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-4 text-xs">
+        <div className="ads-surface p-6 space-y-4 text-xs">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <Database className="w-4 h-4 text-emerald-500" />
@@ -214,7 +215,7 @@ export default function ConfiguracoesPage() {
         </div>
 
         {/* 3. Credenciais e APIs */}
-        <form onSubmit={handleSaveKeys} className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-4 text-xs">
+        <form onSubmit={handleSaveKeys} className="ads-surface p-6 space-y-4 text-xs">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <Key className="w-4 h-4 text-emerald-500" />
@@ -388,7 +389,7 @@ export default function ConfiguracoesPage() {
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-all hover:scale-[1.02] flex items-center gap-1.5"
+              className="px-5 py-2 rounded-xl bg-[#117783] hover:bg-[#0d5f68] text-white dark:bg-[#04C4D9] dark:text-[#0A0B0F] dark:hover:bg-[#23d4e5] font-semibold text-xs shadow-xs transition-all hover:scale-[1.02] flex items-center gap-1.5"
             >
               {isSaving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
               <span>{isSaving ? 'Salvando...' : 'Salvar Credenciais Permanentemente'}</span>

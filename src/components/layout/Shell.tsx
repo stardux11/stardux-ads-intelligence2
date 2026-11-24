@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowUpRight, Menu, PanelLeftClose, Sparkles, Sun, Moon, Zap } from 'lucide-react';
+import { Menu, Sparkles, Sun, Moon, Zap } from 'lucide-react';
 import { Sidebar, AD_NAV_ITEMS } from './Sidebar';
 import { ImportCsvModal } from '../ads/ImportCsvModal';
 import { CreateAdModal } from '../ads/CreateAdModal';
@@ -29,7 +29,9 @@ export function Shell({ children }: ShellProps) {
     const insideFrame = window.self !== window.top || params.get('embedded') === '1';
     setEmbedded(insideFrame);
     const queryTheme = params.get('theme');
-    const savedTheme = window.localStorage.getItem('stardux-ads-theme');
+    // Third-party iframe contexts may block storage (Safari and privacy settings).
+    let savedTheme: string | null = null;
+    try { savedTheme = window.localStorage.getItem('stardux-ads-theme'); } catch { /* Embedded mode works without storage */ }
     setIsDark(queryTheme === 'light' ? false : queryTheme === 'dark' ? true : savedTheme !== 'light');
 
     const onParentTheme = (event: MessageEvent) => {
@@ -45,7 +47,10 @@ export function Shell({ children }: ShellProps) {
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDark);
-    if (!embedded) window.localStorage.setItem('stardux-ads-theme', isDark ? 'dark' : 'light');
+    if (!embedded) {
+      try { window.localStorage.setItem('stardux-ads-theme', isDark ? 'dark' : 'light'); }
+      catch { /* Theme stays active for this session */ }
+    }
   }, [embedded, isDark]);
 
   useEffect(() => { setMobileOpen(false); }, [pathname]);

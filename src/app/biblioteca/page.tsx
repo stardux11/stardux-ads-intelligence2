@@ -129,21 +129,22 @@ export default function BibliotecaPage() {
 
   return (
     <Shell>
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="ads-hero flex flex-col justify-between gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <span className="ads-eyebrow">INTELIGÊNCIA · REFERÊNCIAS</span>
+            <h1 className="ads-page-title">
               Biblioteca & Referências Criativas
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="ads-subtitle">
               Coleções salvas, anotações de copywriters e banco de ganchos para futuras campanhas da agência.
             </p>
           </div>
 
           <button
             onClick={() => setShowAddCollection(!showAddCollection)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-all hover:scale-[1.02]"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#117783] hover:bg-[#0d5f68] text-white dark:bg-[#04C4D9] dark:text-[#0A0B0F] dark:hover:bg-[#23d4e5] font-semibold text-xs shadow-xs transition-all hover:scale-[1.02]"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Nova Pasta</span>

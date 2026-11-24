@@ -96,21 +96,22 @@ export default function ProjetosPage() {
 
   return (
     <Shell>
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="ads-hero flex flex-col justify-between gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <span className="ads-eyebrow">INTELIGÊNCIA · ORGANIZAÇÃO</span>
+            <h1 className="ads-page-title">
               Projetos de Pesquisa & Monitoramento
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="ads-subtitle">
               Organize anúncios e concorrentes por pastas de projetos estratégicos de clientes.
             </p>
           </div>
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition-all hover:scale-[1.02]"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#117783] hover:bg-[#0d5f68] text-white dark:bg-[#04C4D9] dark:text-[#0A0B0F] dark:hover:bg-[#23d4e5] font-semibold text-xs shadow-xs transition-all hover:scale-[1.02]"
           >
             <PlusCircle className="w-3.5 h-3.5" />
             <span>Novo Projeto</span>
@@ -128,7 +129,7 @@ export default function ProjetosPage() {
             {projects.map((proj) => (
               <div
                 key={proj.id}
-                className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-700 transition-all"
+                className="ads-surface p-5 flex flex-col justify-between hover:border-slate-300 dark:hover:border-slate-700 transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">

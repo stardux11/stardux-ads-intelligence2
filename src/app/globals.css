@@ -6,14 +6,14 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 222 47% 8%;
+    --background: 216 33% 97%;
+    --foreground: 228 20% 5%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 8%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 8%;
-    --primary: 186 97% 44%; /* Stardux Cyan #04C4D9 */
-    --primary-foreground: 222 47% 6%;
+    --primary: 189 89% 28%; /* Stardux OS light: deep cyan for readable actions */
+    --primary-foreground: 0 0% 100%;
     --secondary: 220 14% 94%;
     --secondary-foreground: 222 47% 11%;
     --muted: 220 14% 94%;
@@ -25,7 +25,7 @@
     --border: 220 13% 90%;
     --input: 220 13% 90%;
     --ring: 186 97% 44%;
-    --radius: 0.75rem;
+    --radius: 0.875rem;
     /* Brand tokens */
     --brand-cyan: #04C4D9;
     --brand-violet: #7C3AED;
@@ -35,13 +35,13 @@
   }
 
   .dark {
-    --background: 230 17% 5%;
+    --background: 228 20% 5%;
     --foreground: 210 40% 96%;
-    --card: 228 18% 7%;
+    --card: 228 19% 9%;
     --card-foreground: 210 40% 96%;
     --popover: 228 18% 7%;
     --popover-foreground: 210 40% 96%;
-    --primary: 186 97% 48%;
+    --primary: 186 96% 43%;
     --primary-foreground: 222 47% 6%;
     --secondary: 222 18% 12%;
     --secondary-foreground: 210 40% 96%;
@@ -51,7 +51,7 @@
     --accent-foreground: 0 0% 100%;
     --destructive: 335 82% 52%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 18% 13%;
+    --border: 222 18% 15%;
     --input: 222 18% 13%;
     --ring: 186 97% 48%;
   }
@@ -59,8 +59,8 @@
 
 /* ─── Base Styles ─────────────────────────────────────────────────────────── */
 body {
-  background-color: #f1f5f9;
-  color: #0f172a;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   font-family: var(--font-sans), sans-serif;
   font-feature-settings: "rlig" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;
@@ -73,8 +73,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dark body {
-  background-color: #0a0b0f;
-  color: #f1f5f9;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
 
 /* ─── Glassmorphism ───────────────────────────────────────────────────────── */
@@ -143,9 +143,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ─── Input Enhancements ──────────────────────────────────────────────────── */
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  ring: 2px solid rgba(4, 196, 217, 0.4);
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
 }
 
 /* ─── Custom Scrollbar ────────────────────────────────────────────────────── */
@@ -216,4 +216,99 @@ input:focus, textarea:focus, select:focus {
   .page-break {
     page-break-before: always;
   }
+}
+
+/* ─── Ads Intelligence · Stardux OS integration layer ──────────────────── */
+/* Used only by the Ads frontend. All API endpoints and data logic remain unchanged. */
+.ads-workspace {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  background-image:
+    radial-gradient(ellipse 60% 28% at 96% -12%, rgba(4,196,217,.065), transparent 82%),
+    radial-gradient(ellipse 50% 28% at -12% 52%, rgba(124,58,237,.035), transparent 82%);
+}
+.ads-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+.ads-page-title {
+  margin: .45rem 0 0;
+  font-size: clamp(1.65rem, 2.65vw, 2.15rem);
+  letter-spacing: -.05em;
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-weight: 800;
+  line-height: 1.12;
+  color: hsl(var(--foreground));
+}
+.ads-subtitle {
+  margin-top: .6rem;
+  max-width: 46rem;
+  font-size: .875rem;
+  line-height: 1.65;
+  color: hsl(var(--muted-foreground));
+}
+.ads-surface {
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border-radius: 1.125rem;
+  box-shadow: 0 2px 10px rgba(9,16,36,.035);
+}
+.ads-hero {
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 1.375rem;
+  background:
+    radial-gradient(ellipse 52% 150% at 105% 0%, rgba(4,196,217,.10), transparent 85%),
+    radial-gradient(ellipse 34% 110% at 89% 100%, rgba(124,58,237,.07), transparent 84%),
+    hsl(var(--card));
+}
+.ads-stat {
+  border: 1px solid hsl(var(--border));
+  border-radius: 1rem;
+  background: hsl(var(--card));
+  box-shadow: 0 2px 9px rgba(9,16,36,.025);
+}
+.ads-section-title {
+  color: hsl(var(--foreground));
+  font-size: 1rem;
+  font-weight: 750;
+  letter-spacing: -.02em;
+}
+.ads-toolbar {
+  border: 1px solid hsl(var(--border));
+  border-radius: 1rem;
+  background: hsl(var(--card));
+}
+.ads-workspace :is(input,select,textarea) {
+  color-scheme: light;
+}
+.dark .ads-workspace :is(input,select,textarea) {
+  color-scheme: dark;
+}
+.ads-workspace [role="tab"][aria-selected="true"] {
+  font-weight: 700;
+}
+@media (max-width: 640px) {
+  .ads-content { padding-left: 1rem; padding-right: 1rem; }
+  .ads-surface, .ads-hero { border-radius: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ads-workspace *, .ads-workspace *::before, .ads-workspace *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+@media print {
+  .ads-embedded-header { display: none !important; }
+  .ads-content { padding: 0 !important; max-width: none !important; }
 }
